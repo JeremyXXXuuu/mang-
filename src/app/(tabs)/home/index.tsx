@@ -9,7 +9,7 @@ const home = () => {
 
   return (
     <View>
-      <Text>home</Text>
+      <Text className="text-2xl">home</Text>
       <View>
         <AddButton onPress={addFood} />
       </View>
