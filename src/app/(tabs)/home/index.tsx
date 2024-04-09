@@ -8,8 +8,8 @@ const home = () => {
   }
 
   return (
-    <View>
-      <Text className="text-2xl">home</Text>
+    <View className="text-2xl rounded-md border-2">
+      <Text className="text-2xl rounded-md border-2">home</Text>
       <View>
         <AddButton onPress={addFood} />
       </View>
