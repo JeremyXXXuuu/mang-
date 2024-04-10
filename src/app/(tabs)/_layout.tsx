@@ -26,7 +26,7 @@ export default function TabLayout() {
 
   function headerRight() {
     return (
-      <Link href="/modal/food" asChild>
+      <Link href="/modal/user" asChild>
         <Pressable>
           {({ pressed }) => (
             <FontAwesome
