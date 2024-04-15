@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { FlatList, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import FoodItem, { FoodItemProps } from "./foodItem";
 const DATA: FoodItemProps[] = [
@@ -130,10 +130,10 @@ const DATA: FoodItemProps[] = [
 export const MyList = () => {
   return (
     <View className="flex flex-row">
-      <FlashList
+      <FlatList
         data={DATA}
         renderItem={({ item, index }) => <FoodItem {...item} />}
-        estimatedItemSize={50}
+        // estimatedItemSize={50}
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={() => <View className="h-2 bg-gray-200" />}
         contentContainerStyle={{ paddingBottom: 200, paddingTop: 10 }}
