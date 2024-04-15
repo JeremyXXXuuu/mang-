@@ -5,11 +5,13 @@ import {
   Pressable,
   Image,
   ScrollView,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 const PlaceholderImage = require("@/assets/images/placeholder.png");
 import * as SQLite from "expo-sqlite";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const sampleFood = {
   id: "1",
@@ -171,6 +173,22 @@ const AddFood = () => {
       );
     });
   };
+  const [dateTime, setDateTime] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || dateTime;
+    setShowDatePicker(false);
+    setDateTime(currentDate);
+    setShowTimePicker(true); // show time picker after date is picked
+  };
+
+  const onTimeChange = (event, selectedTime) => {
+    const currentTime = selectedTime || dateTime;
+    setShowTimePicker(false);
+    setDateTime(currentTime);
+  };
 
   return (
     <ScrollView className="flex flex-col gap-6 border-2 rounded-md border-black m-2 ">
@@ -204,11 +222,27 @@ const AddFood = () => {
         onChangeText={(text) => setMacros({ ...macros, C: Number(text) })}
         value={macros?.C?.toString()}
       />
-      <TextInput
-        placeholder="Enter time"
-        onChangeText={(text) => setTime(text)}
-        value={time}
+      <Button
+        label="Show Date Picker"
+        onPress={() => setShowDatePicker(true)}
       />
+      {showDatePicker && (
+        <DateTimePicker
+          value={dateTime}
+          mode="date"
+          display="default"
+          onChange={onDateChange}
+        />
+      )}
+
+      {showTimePicker && (
+        <DateTimePicker
+          value={dateTime}
+          mode="time"
+          display="default"
+          onChange={onTimeChange}
+        />
+      )}
       <TextInput
         placeholder="Enter category"
         onChangeText={(text) => setCategory(text)}
