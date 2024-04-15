@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text } from "@/src/components/Themed";
 import React, { useState } from "react";
 import AddButton from "@/src/components/(tabs)/AddButton";
 import { router } from "expo-router";

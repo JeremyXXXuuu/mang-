@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text } from "@/src/components/Themed";
 import React from "react";
 import { Image } from "expo-image";
 
@@ -44,8 +44,8 @@ const FoodItem = (props: FoodItemProps) => {
         />
       </View>
       <View className="flex flex-col">
-        <Text>{props.name}</Text>
-        <View className="flex flex-row gap-2">
+        <Text className="p-1">{props.name}</Text>
+        <View className="flex flex-row p-2 gap-1">
           <Text>{props.repas}</Text>
           <Text>{props.time}</Text>
         </View>

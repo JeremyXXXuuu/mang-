@@ -46,19 +46,28 @@ export function Button({
   label,
   theme,
   onPress,
+  className,
 }: {
   label: string;
   theme?: string;
   onPress: () => void;
+  className?: string;
 }) {
   return (
-    <View>
-      <Pressable onPress={onPress}>
-        <Text>{label}</Text>
-      </Pressable>
-    </View>
+    <Pressable
+      onPress={onPress}
+      className="text-lg border-2 rounded-md border-black text-center p-2 m-2 bg-gray-200"
+    >
+      <Text>{label}</Text>
+    </Pressable>
   );
 }
+
+type Macros = {
+  C?: number;
+  P?: number;
+  F?: number;
+};
 
 const AddFood = () => {
   const [image, setImage] = useState<string | undefined>(undefined);
@@ -68,7 +77,7 @@ const AddFood = () => {
 
   const [name, setName] = useState("");
   const [calories, setCalories] = useState<number>();
-  const [macros, setMacros] = useState("");
+  const [macros, setMacros] = useState<Macros>();
   const [time, setTime] = useState("");
   const [category, setCategory] = useState("");
 
@@ -144,7 +153,7 @@ const AddFood = () => {
         [
           name,
           calories || 0,
-          macros,
+          JSON.stringify(macros),
           time,
           location,
           price,
@@ -181,9 +190,19 @@ const AddFood = () => {
         value={calories?.toString()}
       />
       <TextInput
-        placeholder="Enter Macros"
-        onChangeText={(text) => setMacros(text)}
-        value={macros}
+        placeholder="fat"
+        onChangeText={(text) => setMacros({ ...macros, F: Number(text) })}
+        value={macros?.F?.toString()}
+      />
+      <TextInput
+        placeholder="protein"
+        onChangeText={(text) => setMacros({ ...macros, P: Number(text) })}
+        value={macros?.P?.toString()}
+      />
+      <TextInput
+        placeholder="carbs"
+        onChangeText={(text) => setMacros({ ...macros, C: Number(text) })}
+        value={macros?.C?.toString()}
       />
       <TextInput
         placeholder="Enter time"
@@ -205,8 +224,11 @@ const AddFood = () => {
         onChangeText={(text) => setPrice(text)}
         value={price}
       />
-      <Button label="save food" onPress={savefood} />
-      <Button label="show food" onPress={showFood} />
+
+      <View className="flex flex-row mb-5">
+        <Button className="m-3" label="save" onPress={savefood} />
+        <Button className="m-3" label="show" onPress={showFood} />
+      </View>
     </ScrollView>
   );
 };

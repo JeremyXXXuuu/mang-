@@ -10,7 +10,7 @@ import testIDs from "./test/testIDs";
 import { agendaItems, getMarkedDates } from "./mocks/agendaItems";
 import AgendaItem from "./mocks/AgendaItem";
 import { getTheme, themeColor, lightThemeColor } from "./mocks/theme";
-import { View, Text } from "react-native";
+import { View, Text } from "@/src/components/Themed";
 
 const leftArrowIcon = require("./previous.png");
 const rightArrowIcon = require("./next.png");
