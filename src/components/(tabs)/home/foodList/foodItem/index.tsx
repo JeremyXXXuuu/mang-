@@ -26,7 +26,6 @@ const CaloriesMacros = (props: {
   P: number;
   F: number;
 }) => {
-  console.log(props);
   return (
     <View className="flex flex-row gap-2">
       <Text>{props.calories} Kcal</Text>
@@ -38,12 +37,10 @@ const CaloriesMacros = (props: {
 };
 
 const onPress = (id: string) => {
-  console.log("pressed");
   router.push(`/modal/food/${id}`);
 };
 
 const FoodItem = (props: FoodItemProps) => {
-  console.log("foodItem", props);
   return (
     <Pressable onPress={() => onPress(props.id)}>
       <View className="flex flex-row gap-2">

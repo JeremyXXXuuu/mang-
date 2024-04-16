@@ -16,6 +16,7 @@ import * as SQLite from "expo-sqlite";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
+import { router } from "expo-router";
 
 export function ImageViewer({
   placeholderImageSource,
@@ -201,8 +202,12 @@ const Food = ({ id }: { id: string }) => {
         );
       });
     }
+    //https://github.com/expo/expo/issues/26922#issuecomment-1996862878
+    router.dismissAll();
+    setTimeout(() => {
+      router.push("/(tabs)/home");
+    }, 0);
   };
-
   const [dateTime, setDateTime] = useState(new Date());
   const [mode, setMode] = useState<any>("date");
   const [show, setShow] = useState(false);
