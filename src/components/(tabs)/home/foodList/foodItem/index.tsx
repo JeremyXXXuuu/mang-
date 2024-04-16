@@ -1,13 +1,15 @@
 import { View, Text } from "@/src/components/Themed";
 import React from "react";
 import { Image } from "expo-image";
+import { Pressable } from "react-native";
+import { router } from "expo-router";
 
 export type FoodItemProps = {
   id: string;
   picture: string;
   name: string;
   calories: number;
-  micros: {
+  macros: {
     C: number;
     P: number;
     F: number;
@@ -24,41 +26,50 @@ const CaloriesMacros = (props: {
   P: number;
   F: number;
 }) => {
+  console.log(props);
   return (
     <View className="flex flex-row gap-2">
       <Text>{props.calories} Kcal</Text>
-      <Text>{props.C} g</Text>
-      <Text>{props.P} g</Text>
-      <Text>{props.F} g</Text>
+      <Text>{props.C || 0} g</Text>
+      <Text>{props.P || 0} g</Text>
+      <Text>{props.F || 0} g</Text>
     </View>
   );
 };
 
-const FoodItem = (props: FoodItemProps) => {
-  return (
-    <View className="flex flex-row gap-2">
-      <View>
-        <Image
-          source={{ uri: props.picture }}
-          style={{ width: 200, height: 200 }}
-        />
-      </View>
-      <View className="flex flex-col">
-        <Text className="p-1">{props.name}</Text>
-        <View className="flex flex-row p-2 gap-1">
-          <Text>{props.repas}</Text>
-          <Text>{props.time}</Text>
-        </View>
-        <CaloriesMacros
-          calories={props.calories}
-          C={props.micros.C}
-          P={props.micros.P}
-          F={props.micros.F}
-        />
+const onPress = (id: string) => {
+  console.log("pressed");
+  router.push(`/modal/food/${id}`);
+};
 
-        <Text>{props.location}</Text>
+const FoodItem = (props: FoodItemProps) => {
+  console.log("foodItem", props);
+  return (
+    <Pressable onPress={() => onPress(props.id)}>
+      <View className="flex flex-row gap-2">
+        <View>
+          <Image
+            source={{ uri: props.picture }}
+            style={{ width: 200, height: 200 }}
+          />
+        </View>
+        <View className="flex flex-col">
+          <Text className="p-1">{props.name}</Text>
+          <View className="flex flex-row p-2 gap-1">
+            <Text>{props.repas}</Text>
+            <Text>{props.time}</Text>
+          </View>
+          <CaloriesMacros
+            calories={props.calories}
+            C={props.macros.C}
+            P={props.macros.P}
+            F={props.macros.F}
+          />
+
+          <Text>{props.location}</Text>
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

@@ -20,10 +20,6 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
-  function onPress() {
-    console.log("press from tab layout");
-  }
-
   function headerRight() {
     return (
       <Link href="/modal/user" asChild>

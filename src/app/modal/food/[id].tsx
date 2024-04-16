@@ -1,10 +1,14 @@
 import { StatusBar } from "expo-status-bar";
 import { Platform, StyleSheet } from "react-native";
+import { useLocalSearchParams } from "expo-router";
 
 import { Text, View } from "@/src/components/Themed";
-import AddFood from "@/src/components/(tabs)/home/AddFood";
+import Food from "@/src/components/(tabs)/home/Food";
 
 export default function FoodModalScreen() {
+  const { id } = useLocalSearchParams() as { id: string };
+
+  console.log(id);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Food modal page</Text>
@@ -13,7 +17,7 @@ export default function FoodModalScreen() {
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
 
-      <AddFood />
+      <Food id={id} />
     </View>
   );
 }

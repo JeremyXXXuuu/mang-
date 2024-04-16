@@ -7,7 +7,6 @@ const AddButton = ({ onPress }: { onPress: () => any }) => {
   return (
     <Pressable
       onPress={() => {
-        console.log("press");
         onPress();
       }}
       accessibilityRole="button"

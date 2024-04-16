@@ -6,7 +6,7 @@ import { Calendar, LocaleConfig } from "react-native-calendars";
 import ExpandableCalendarScreen from "@/src/components/(tabs)/home/calendar/ExpandableCalendar";
 const home = () => {
   function addFood() {
-    router.push("/modal/food");
+    router.push("/modal/food/new");
   }
   const [selected, setSelected] = useState("");
   return (
