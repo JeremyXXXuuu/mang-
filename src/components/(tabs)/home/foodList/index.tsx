@@ -1,27 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FlatList, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import * as SQLite from "expo-sqlite";
 import FoodItem, { FoodItemProps } from "./foodItem";
-import { useNavigation, usePathname } from "expo-router";
+import { useNavigation, useFocusEffect } from "expo-router";
+
 // import FocusAwareStatusBar from "@/src/utils/FocusAwareStatusBar";
 
-export const MyList = () => {
+export const MyList = ({ date }: { date: string }) => {
   const [db, setDb] = useState<SQLite.WebSQLDatabase>(
     SQLite.openDatabase("db.db")
   );
   const [foodList, setFoodList] = useState<FoodItemProps[]>([]);
   const navigation = useNavigation();
   const focused = navigation.isFocused();
-  useEffect(() => {
-    //fetch food list from db
-    console.log(`Current page is focused: ${focused}, food list component`);
-    if (focused) {
-      console.log("fetching food list");
+
+  useFocusEffect(
+    useCallback(() => {
       db.transaction((tx) => {
         tx.executeSql(
-          "SELECT * FROM FOOD",
-          [],
+          // "SELECT * FROM FOOD",
+          // [],
+          "SELECT * FROM FOOD WHERE time LIKE ?",
+          [`${date}%`],
           (_, { rows }) => {
             // macros is a string in the db, we need to parse it
             rows._array.forEach((food: any) => {
@@ -32,7 +33,6 @@ export const MyList = () => {
             //   food.time = new Date(food.time);
             // });
             setFoodList(rows._array);
-            console.log(foodList);
           },
           (_, error) => {
             console.log(error);
@@ -40,8 +40,8 @@ export const MyList = () => {
           }
         );
       });
-    }
-  }, [focused]);
+    }, [date, db])
+  );
 
   return (
     <View className="flex flex-row">

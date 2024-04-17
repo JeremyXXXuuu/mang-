@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useState } from "react";
 import { StyleSheet } from "react-native";
 import {
   ExpandableCalendar,
@@ -23,6 +23,10 @@ interface Props {
 }
 
 const ExpandableCalendarScreen = (props: Props) => {
+  const [date, setDate] = useState<string>(
+    new Date().toISOString().split("T")[0]
+  );
+
   const { weekView } = props;
   const marked = useRef(getMarkedDates());
   const theme = useRef(getTheme());
@@ -32,6 +36,7 @@ const ExpandableCalendarScreen = (props: Props) => {
 
   const onDateChanged = useCallback((date, updateSource) => {
     console.log("ExpandableCalendarScreen onDateChanged: ", date, updateSource);
+    setDate(date);
   }, []);
 
   // const onMonthChange = useCallback(({dateString}) => {
@@ -87,8 +92,7 @@ const ExpandableCalendarScreen = (props: Props) => {
         // dayFormat={'yyyy-MM-d'}
       /> */}
       <View className="">
-        {/* <Text>My List</Text> */}
-        <MyList />
+        <MyList date={date} />
       </View>
     </CalendarProvider>
   );
