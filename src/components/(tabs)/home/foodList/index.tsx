@@ -28,10 +28,6 @@ export const MyList = ({ date }: { date: string }) => {
             rows._array.forEach((food: any) => {
               food.macros = JSON.parse(food.macros);
             });
-            // time is a string in the db, we need to parse it
-            // rows._array.forEach((food: any) => {
-            //   food.time = new Date(food.time);
-            // });
             setFoodList(rows._array);
           },
           (_, error) => {

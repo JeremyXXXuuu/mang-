@@ -1,5 +1,5 @@
 import {
-  TextInput,
+  TextInput as DefaultTextInput,
   View,
   Text,
   Pressable,
@@ -10,9 +10,10 @@ import {
   Platform,
   Keyboard,
 } from "react-native";
+import { TextInput } from "@/src/components/Themed";
 import React, { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-const PlaceholderImage = require("@/assets/images/placeholder.png");
+const PlaceholderImage = require("@/assets/images/placeholderImage.png");
 import * as SQLite from "expo-sqlite";
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -31,10 +32,9 @@ export function ImageViewer({
     : placeholderImageSource;
   return (
     <Image
-      width={320}
-      height={320}
       source={imageSource}
-      className="border-2 rounded-lg p-2 m-2"
+      style={{ width: 320, height: 320 }}
+      className="border-2 rounded-lg"
     />
   );
 }
@@ -68,8 +68,6 @@ type Macros = {
 
 const Food = ({ id }: { id: string }) => {
   const [image, setImage] = useState<string | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | undefined>(undefined);
   const [food, setFood] = useState<any>(undefined);
 
   const [name, setName] = useState("");
@@ -160,14 +158,13 @@ const Food = ({ id }: { id: string }) => {
       return;
     }
 
-    console.log("saving food");
     if (id !== "new" && db) {
       db.transaction((tx) => {
         tx.executeSql(
           "UPDATE FOOD SET name = ?, calories = ?, macros = ?, time = ?, location = ?, price = ?, picture = ?, repas = ? WHERE id = ?",
           [
             name,
-            calories || 0,
+            calories || macros?.F! * 9 + macros?.P! * 4 + macros?.C! * 4,
             JSON.stringify(macros),
             dateTime.toISOString(),
             location,
@@ -178,6 +175,10 @@ const Food = ({ id }: { id: string }) => {
           ],
           (_, { rows }) => {
             console.log(rows);
+          },
+          (_, error) => {
+            console.log(error);
+            return true;
           }
         );
       });
@@ -306,7 +307,7 @@ const Food = ({ id }: { id: string }) => {
       keyboardVerticalOffset={65}
     >
       <ScrollView
-        className="flex flex-col gap-3 border-2 rounded-md border-black p-2 m-2"
+        className="flex flex-col gap-3 p-2 m-2"
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
@@ -320,9 +321,8 @@ const Food = ({ id }: { id: string }) => {
           placeholder="Enter name"
           onChangeText={(text) => setName(text)}
           value={name}
-          className="text-lg text-center"
         />
-        <View className="flex flex-row border-2 rounded-lg justify-evenly items-center p-2">
+        <View className="flex flex-row justify-evenly items-center p-2">
           <View>
             <Text>Calories</Text>
             <TextInput
@@ -330,7 +330,6 @@ const Food = ({ id }: { id: string }) => {
               onChangeText={(text) => setCalories(Number(text))}
               value={calories?.toString()}
               keyboardType="numeric"
-              className="text-center text-lg  rounded-lg items-center content-center"
             />
           </View>
 
@@ -341,7 +340,6 @@ const Food = ({ id }: { id: string }) => {
               onChangeText={(text) => setMacros({ ...macros, F: Number(text) })}
               value={macros?.F?.toString()}
               keyboardType="numeric"
-              className="text-center text-lg  rounded-lg items-center content-center"
             />
           </View>
 
@@ -352,7 +350,6 @@ const Food = ({ id }: { id: string }) => {
               onChangeText={(text) => setMacros({ ...macros, P: Number(text) })}
               value={macros?.P?.toString()}
               keyboardType="numeric"
-              className="text-center text-lg  rounded-lg items-center content-center"
             />
           </View>
           <View>
@@ -362,13 +359,13 @@ const Food = ({ id }: { id: string }) => {
               onChangeText={(text) => setMacros({ ...macros, C: Number(text) })}
               value={macros?.C?.toString()}
               keyboardType="numeric"
-              className="text-center text-lg  rounded-lg items-center content-center"
             />
           </View>
         </View>
         {/* show date time picker directly in ios,  */}
         {Platform.OS === "ios" ? (
-          <SafeAreaView className="flex flex-row gap-2">
+          <SafeAreaView className="flex flex-row">
+            <Text className="text-lg align-middle">Eating time: </Text>
             <DateTimePicker
               testID="dateTimePicker"
               value={dateTime}
@@ -408,17 +405,32 @@ const Food = ({ id }: { id: string }) => {
           onChangeText={(text) => setLocation(text)}
           value={location}
         />
-        <TextInput
-          placeholder="Enter price"
-          onChangeText={(text) => setPrice(text)}
-          value={price}
-          keyboardType="numeric"
-        />
+
+        <View style={{ flexDirection: "row" }}>
+          <Text
+            style={{
+              fontSize: 18,
+
+              color: "#202020",
+              textAlign: "center",
+              textAlignVertical: "center",
+              marginTop: 5,
+            }}
+          >
+            Price €{" "}
+          </Text>
+          <TextInput
+            placeholder="Enter price"
+            onChangeText={(text) => setPrice(text)}
+            value={price}
+            keyboardType="numeric"
+          />
+        </View>
 
         <View className="flex flex-row mb-5">
           <Button className="m-3" label="save" onPress={savefood} />
           <Button className="m-3" label="show" onPress={showFood} />
-          {/* <Button className="m-3" label="clear" onPress={clearDB} /> */}
+          <Button className="m-3" label="clear" onPress={clearDB} />
           <Button className="m-3" label="delete" onPress={deleteDB} />
         </View>
       </ScrollView>
