@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  Keyboard,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -241,13 +242,51 @@ const Food = ({ id }: { id: string }) => {
     });
   };
 
+  const [keyboardShown, setKeyboardShown] = useState(false);
+
+  useEffect(() => {
+    // Add listeners for keyboard show/hide events
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardShown(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardShown(false);
+      }
+    );
+
+    // Clean up the listeners when the component unmounts
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+  const [scrollY, setScrollY] = useState(0);
+
+  const handleScroll = function (event: any) {
+    const currentScrollY = event.nativeEvent.contentOffset.y;
+    if (currentScrollY < scrollY && keyboardShown) {
+      // User is scrolling down
+      Keyboard.dismiss();
+    }
+    setScrollY(currentScrollY);
+  };
+
   return (
     <KeyboardAvoidingView
       behavior="padding"
       enabled
-      keyboardVerticalOffset={100}
+      keyboardVerticalOffset={65}
     >
-      <ScrollView className="flex flex-col gap-6 border-2 rounded-md border-black m-2 ">
+      <ScrollView
+        className="flex flex-col gap-6 border-2 rounded-md border-black m-2"
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
         <Button label="choose a pic" onPress={pickImageAsync} />
         <ImageViewer
           placeholderImageSource={PlaceholderImage}
