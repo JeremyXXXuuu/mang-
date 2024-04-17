@@ -44,7 +44,7 @@ export const MyList = ({ date }: { date: string }) => {
   );
 
   return (
-    <View className="flex flex-row">
+    <View className="flex flex-row m-1">
       <FlatList
         data={foodList}
         renderItem={({ item, index }) => <FoodItem {...item} />}

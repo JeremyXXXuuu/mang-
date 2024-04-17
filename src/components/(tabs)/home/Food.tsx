@@ -29,7 +29,14 @@ export function ImageViewer({
   const imageSource = selectedImage
     ? { uri: selectedImage }
     : placeholderImageSource;
-  return <Image width={320} height={320} source={imageSource} />;
+  return (
+    <Image
+      width={320}
+      height={320}
+      source={imageSource}
+      className="border-2 rounded-lg p-2 m-2"
+    />
+  );
 }
 
 export function Button({
@@ -66,7 +73,7 @@ const Food = ({ id }: { id: string }) => {
   const [food, setFood] = useState<any>(undefined);
 
   const [name, setName] = useState("");
-  const [calories, setCalories] = useState<number>();
+  const [calories, setCalories] = useState<number>(0);
   const [macros, setMacros] = useState<Macros>();
   const [repas, setRepas] = useState("");
 
@@ -151,10 +158,6 @@ const Food = ({ id }: { id: string }) => {
     if (!name) {
       alert("please enter name");
       return;
-    }
-    //if image is empty, set it to placeholder image
-    if (!image) {
-      setImage(PlaceholderImage);
     }
 
     console.log("saving food");
@@ -242,6 +245,26 @@ const Food = ({ id }: { id: string }) => {
     });
   };
 
+  const deleteDB = () => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "DELETE FROM FOOD WHERE id = ?",
+        [id],
+        (_, { rows }) => {
+          console.log(rows);
+        },
+        (_, error) => {
+          console.log(error);
+          return true;
+        }
+      );
+    });
+    router.dismissAll();
+    setTimeout(() => {
+      router.push("/(tabs)/home");
+    }, 0);
+  };
+
   const [keyboardShown, setKeyboardShown] = useState(false);
 
   useEffect(() => {
@@ -283,44 +306,66 @@ const Food = ({ id }: { id: string }) => {
       keyboardVerticalOffset={65}
     >
       <ScrollView
-        className="flex flex-col gap-6 border-2 rounded-md border-black m-2"
+        className="flex flex-col gap-3 border-2 rounded-md border-black p-2 m-2"
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        <Button label="choose a pic" onPress={pickImageAsync} />
-        <ImageViewer
-          placeholderImageSource={PlaceholderImage}
-          selectedImage={image}
-        />
+        <Pressable onPress={pickImageAsync}>
+          <ImageViewer
+            placeholderImageSource={PlaceholderImage}
+            selectedImage={image}
+          />
+        </Pressable>
         <TextInput
           placeholder="Enter name"
           onChangeText={(text) => setName(text)}
           value={name}
+          className="text-lg text-center"
         />
-        <TextInput
-          placeholder="Enter calories"
-          onChangeText={(text) => setCalories(Number(text))}
-          value={calories?.toString()}
-          keyboardType="numeric"
-        />
-        <TextInput
-          placeholder="fat"
-          onChangeText={(text) => setMacros({ ...macros, F: Number(text) })}
-          value={macros?.F?.toString()}
-          keyboardType="numeric"
-        />
-        <TextInput
-          placeholder="protein"
-          onChangeText={(text) => setMacros({ ...macros, P: Number(text) })}
-          value={macros?.P?.toString()}
-          keyboardType="numeric"
-        />
-        <TextInput
-          placeholder="carbs"
-          onChangeText={(text) => setMacros({ ...macros, C: Number(text) })}
-          value={macros?.C?.toString()}
-          keyboardType="numeric"
-        />
+        <View className="flex flex-row border-2 rounded-lg justify-evenly items-center p-2">
+          <View>
+            <Text>Calories</Text>
+            <TextInput
+              placeholder="Enter calories"
+              onChangeText={(text) => setCalories(Number(text))}
+              value={calories?.toString()}
+              keyboardType="numeric"
+              className="text-center text-lg  rounded-lg items-center content-center"
+            />
+          </View>
+
+          <View>
+            <Text>Fat(g)</Text>
+            <TextInput
+              placeholder="fat"
+              onChangeText={(text) => setMacros({ ...macros, F: Number(text) })}
+              value={macros?.F?.toString()}
+              keyboardType="numeric"
+              className="text-center text-lg  rounded-lg items-center content-center"
+            />
+          </View>
+
+          <View>
+            <Text>Protein(g)</Text>
+            <TextInput
+              placeholder="protein"
+              onChangeText={(text) => setMacros({ ...macros, P: Number(text) })}
+              value={macros?.P?.toString()}
+              keyboardType="numeric"
+              className="text-center text-lg  rounded-lg items-center content-center"
+            />
+          </View>
+          <View>
+            <Text>Carbs(g)</Text>
+            <TextInput
+              placeholder="carbs"
+              onChangeText={(text) => setMacros({ ...macros, C: Number(text) })}
+              value={macros?.C?.toString()}
+              keyboardType="numeric"
+              className="text-center text-lg  rounded-lg items-center content-center"
+            />
+          </View>
+        </View>
         {/* show date time picker directly in ios,  */}
         {Platform.OS === "ios" ? (
           <SafeAreaView className="flex flex-row gap-2">
@@ -373,7 +418,8 @@ const Food = ({ id }: { id: string }) => {
         <View className="flex flex-row mb-5">
           <Button className="m-3" label="save" onPress={savefood} />
           <Button className="m-3" label="show" onPress={showFood} />
-          <Button className="m-3" label="clear" onPress={clearDB} />
+          {/* <Button className="m-3" label="clear" onPress={clearDB} /> */}
+          <Button className="m-3" label="delete" onPress={deleteDB} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
