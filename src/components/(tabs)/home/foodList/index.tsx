@@ -4,6 +4,7 @@ import { FlashList } from "@shopify/flash-list";
 import * as SQLite from "expo-sqlite";
 import FoodItem, { FoodItemProps } from "./foodItem";
 import { useNavigation, useFocusEffect } from "expo-router";
+import Analysis from "../foodList/Analysis/analysis";
 
 // import FocusAwareStatusBar from "@/src/utils/FocusAwareStatusBar";
 
@@ -40,16 +41,19 @@ export const MyList = ({ date }: { date: string }) => {
   );
 
   return (
-    <View className="flex flex-row m-1">
-      <FlatList
-        data={foodList}
-        renderItem={({ item, index }) => <FoodItem {...item} />}
-        // estimatedItemSize={50}
-        keyExtractor={(item) => item.id}
-        ItemSeparatorComponent={() => <View className="h-2 bg-gray-200" />}
-        contentContainerStyle={{ paddingBottom: 200, paddingTop: 10 }}
-      />
-      {/* <FocusAwareStatusBar /> */}
+    <View className="flex flex-col">
+      <Analysis data={foodList} />
+      <View className="flex flex-row m-1">
+        <FlatList
+          data={foodList}
+          renderItem={({ item, index }) => <FoodItem {...item} />}
+          // estimatedItemSize={50}
+          keyExtractor={(item) => item.id}
+          ItemSeparatorComponent={() => <View className="h-2 bg-gray-200" />}
+          contentContainerStyle={{ paddingBottom: 500, paddingTop: 10 }}
+        />
+        {/* <FocusAwareStatusBar /> */}
+      </View>
     </View>
   );
 };
