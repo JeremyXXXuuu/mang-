@@ -5,23 +5,30 @@ import CircularProgress, {
 } from "react-native-circular-progress-indicator";
 import { FoodItemProps } from "../foodItem";
 
+type Base = {
+  calories: number;
+  carbs: number;
+  protein: number;
+  fat: number;
+};
+
 const DURATION = 800;
 
-const Analysis = ({ data }: { data: FoodItemProps[] }) => {
+const Analysis = ({ data, base }: { data: FoodItemProps[]; base: Base }) => {
   const calories = data.reduce((acc, food) => acc + food.calories, 0);
   const C = data.reduce((acc, food) => acc + food.macros.C, 0);
   const P = data.reduce((acc, food) => acc + food.macros.P, 0);
   const F = data.reduce((acc, food) => acc + food.macros.F, 0);
 
-  const totalCalories = 2000;
-  const totalC = 200;
-  const totalP = 100;
-  const totalF = 50;
+  const totalCalories = base.calories;
+  const totalC = base.carbs;
+  const totalP = base.protein;
+  const totalF = base.fat;
 
   return (
     <View className="flex flex-row justify-evenly mt-2">
       <CircularProgress
-        value={(calories / totalCalories) * 100}
+        value={totalCalories == 0 ? 0 : (calories / totalCalories) * 100}
         radius={44}
         title="Calories"
         duration={DURATION}
@@ -39,7 +46,7 @@ const Analysis = ({ data }: { data: FoodItemProps[] }) => {
         subtitleStyle={{ fontSize: 10, fontWeight: "500" }}
       />
       <CircularProgress
-        value={(F / totalF) * 100}
+        value={totalF == 0 ? 0 : (F / totalF) * 100}
         radius={44}
         title="Fat"
         duration={DURATION}
@@ -57,7 +64,7 @@ const Analysis = ({ data }: { data: FoodItemProps[] }) => {
         subtitleStyle={{ fontSize: 10, fontWeight: "500" }}
       />
       <CircularProgress
-        value={(C / totalC) * 100}
+        value={totalC == 0 ? 0 : (C / totalC) * 100}
         radius={44}
         title="Carbs"
         duration={DURATION}
@@ -75,7 +82,7 @@ const Analysis = ({ data }: { data: FoodItemProps[] }) => {
         subtitleStyle={{ fontSize: 10, fontWeight: "500" }}
       />
       <CircularProgress
-        value={(P / totalP) * 100}
+        value={totalP == 0 ? 0 : (P / totalP) * 100}
         radius={44}
         title="Protein"
         duration={DURATION}
