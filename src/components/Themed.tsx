@@ -67,16 +67,13 @@ export function TextInput(props: TextInputProps) {
 
 const commonStyle = StyleSheet.create({
   textInput: {
-    // Add your common styles here
-    borderColor: "#D9D9D9",
-    borderWidth: 2,
-    borderRadius: 6,
+    borderRadius: 8,
     paddingHorizontal: 10,
     textAlign: "center",
     textAlignVertical: "center",
-    fontSize: 18,
-    padding: 5,
-    fontWeight: "500",
-    color: "#646464",
+    fontSize: 16,
+    padding: 6,
+    fontWeight: "400",
+    backgroundColor: "#fff",
   },
 });

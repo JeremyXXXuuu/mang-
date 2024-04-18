@@ -1,7 +1,5 @@
 import {
   TextInput as DefaultTextInput,
-  View,
-  Text,
   Pressable,
   Image,
   ScrollView,
@@ -10,7 +8,7 @@ import {
   Platform,
   Keyboard,
 } from "react-native";
-import { TextInput } from "@/src/components/Themed";
+import { TextInput, Text, View } from "@/src/components/Themed";
 import React, { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 const PlaceholderImage = require("@/assets/images/placeholderImage.png");
@@ -33,8 +31,7 @@ export function ImageViewer({
   return (
     <Image
       source={imageSource}
-      style={{ width: 320, height: 320 }}
-      className="border-2 rounded-lg"
+      style={{ width: 320, height: 320, alignSelf: "center", borderRadius: 16 }}
     />
   );
 }
@@ -61,9 +58,9 @@ export function Button({
 }
 
 type Macros = {
-  C?: number;
-  P?: number;
-  F?: number;
+  C: number;
+  P: number;
+  F: number;
 };
 
 const Food = ({ id }: { id: string }) => {
@@ -72,7 +69,7 @@ const Food = ({ id }: { id: string }) => {
 
   const [name, setName] = useState("");
   const [calories, setCalories] = useState<number>(0);
-  const [macros, setMacros] = useState<Macros>();
+  const [macros, setMacros] = useState<Macros>({ C: 0, P: 0, F: 0 });
   const [repas, setRepas] = useState("");
 
   const [location, setLocation] = useState("");
@@ -148,10 +145,10 @@ const Food = ({ id }: { id: string }) => {
     });
   };
 
-  const savefood = () => {
-    if (!calories) {
-      setCalories(macros?.F! * 9 + macros?.P! * 4 + macros?.C! * 4);
-    }
+  const saveFood = () => {
+    // if (!calories) {
+    //   setCalories(macros?.F! * 9 + macros?.P! * 4 + macros?.C! * 4);
+    // }
     //make sure name is not empty, if yes alert the user
     if (!name) {
       alert("please enter name");
@@ -164,7 +161,9 @@ const Food = ({ id }: { id: string }) => {
           "UPDATE FOOD SET name = ?, calories = ?, macros = ?, time = ?, location = ?, price = ?, picture = ?, repas = ? WHERE id = ?",
           [
             name,
-            calories || macros?.F! * 9 + macros?.P! * 4 + macros?.C! * 4,
+            calories == 0
+              ? macros?.F! * 9 + macros?.P! * 4 + macros?.C! * 4
+              : calories,
             JSON.stringify(macros),
             dateTime.toISOString(),
             location,
@@ -188,7 +187,9 @@ const Food = ({ id }: { id: string }) => {
           "INSERT INTO FOOD (name, calories, macros, time, location, price, picture, user_id, repas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
           [
             name,
-            calories || 0,
+            calories == 0
+              ? macros?.F! * 9 + macros?.P! * 4 + macros?.C! * 4
+              : calories,
             JSON.stringify(macros),
             dateTime.toISOString(),
             location,
@@ -311,127 +312,163 @@ const Food = ({ id }: { id: string }) => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        <Pressable onPress={pickImageAsync}>
-          <ImageViewer
-            placeholderImageSource={PlaceholderImage}
-            selectedImage={image}
+        <View>
+          <Pressable onPress={pickImageAsync}>
+            <ImageViewer
+              placeholderImageSource={PlaceholderImage}
+              selectedImage={image}
+            />
+          </Pressable>
+          <TextInput
+            placeholder="Enter name"
+            onChangeText={(text) => setName(text)}
+            value={name}
+            style={{ fontSize: 24, marginVertical: 16, height: 48 }}
           />
-        </Pressable>
-        <TextInput
-          placeholder="Enter name"
-          onChangeText={(text) => setName(text)}
-          value={name}
-        />
-        <View className="flex flex-row justify-evenly items-center p-2">
-          <View>
-            <Text>Calories</Text>
-            <TextInput
-              placeholder="Enter calories"
-              onChangeText={(text) => setCalories(Number(text))}
-              value={calories?.toString()}
-              keyboardType="numeric"
-            />
+
+          <View className="flex flex-row justify-between items-center my-4">
+            <View style={{ width: 68 }}>
+              <Text style={{ textAlign: "center" }}>Calories</Text>
+              <TextInput
+                placeholder="Enter calories"
+                onChangeText={(text) => setCalories(Number(text))}
+                value={calories?.toString()}
+                keyboardType="numeric"
+              />
+            </View>
+
+            <View style={{ width: 68 }}>
+              <Text style={{ textAlign: "center" }}>Fat(g)</Text>
+              <TextInput
+                placeholder="fat"
+                onChangeText={(text) => {
+                  setMacros({ ...macros, F: Number(text) });
+                }}
+                value={macros?.F?.toString()}
+                keyboardType="numeric"
+              />
+            </View>
+
+            <View style={{ width: 68 }}>
+              <Text style={{ textAlign: "center" }}>Protein(g)</Text>
+              <TextInput
+                placeholder="protein"
+                onChangeText={(text) => {
+                  setMacros({ ...macros, P: Number(text) });
+                }}
+                value={macros?.P?.toString()}
+                keyboardType="numeric"
+              />
+            </View>
+
+            <View style={{ width: 68 }}>
+              <Text style={{ textAlign: "center" }}>Carbs(g)</Text>
+              <TextInput
+                placeholder="carbs"
+                onChangeText={(text) => {
+                  setMacros({ ...macros, C: Number(text) });
+                }}
+                value={macros?.C?.toString()}
+                keyboardType="numeric"
+              />
+            </View>
+          </View>
+          {/* show date time picker directly in ios,  */}
+
+          <View className="my-2">
+            {Platform.OS === "ios" ? (
+              <SafeAreaView className="flex flex-row justify-between">
+                <Text className="text-lg align-middle">Eating time: </Text>
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={dateTime}
+                  mode="datetime"
+                  onChange={onChange}
+                />
+              </SafeAreaView>
+            ) : (
+              <View className="flex flex-row gap-2">
+                <Button
+                  label={dateTime.toLocaleDateString()}
+                  onPress={showDatepicker}
+                />
+                <Button
+                  label={dateTime.toLocaleTimeString()}
+                  onPress={showTimepicker}
+                />
+              </View>
+            )}
           </View>
 
-          <View>
-            <Text>Fat(g)</Text>
-            <TextInput
-              placeholder="fat"
-              onChangeText={(text) => setMacros({ ...macros, F: Number(text) })}
-              value={macros?.F?.toString()}
-              keyboardType="numeric"
-            />
-          </View>
-
-          <View>
-            <Text>Protein(g)</Text>
-            <TextInput
-              placeholder="protein"
-              onChangeText={(text) => setMacros({ ...macros, P: Number(text) })}
-              value={macros?.P?.toString()}
-              keyboardType="numeric"
-            />
-          </View>
-          <View>
-            <Text>Carbs(g)</Text>
-            <TextInput
-              placeholder="carbs"
-              onChangeText={(text) => setMacros({ ...macros, C: Number(text) })}
-              value={macros?.C?.toString()}
-              keyboardType="numeric"
-            />
-          </View>
-        </View>
-        {/* show date time picker directly in ios,  */}
-        {Platform.OS === "ios" ? (
-          <SafeAreaView className="flex flex-row">
-            <Text className="text-lg align-middle">Eating time: </Text>
+          {show && (
             <DateTimePicker
               testID="dateTimePicker"
               value={dateTime}
-              mode="datetime"
+              mode={mode}
+              is24Hour={true}
               onChange={onChange}
             />
-          </SafeAreaView>
-        ) : (
-          <View className="flex flex-col gap-2">
-            <Button
-              label={dateTime.toLocaleDateString()}
-              onPress={showDatepicker}
-            />
-            <Button
-              label={dateTime.toLocaleTimeString()}
-              onPress={showTimepicker}
+          )}
+
+          <View className="flex flex-row justify-between my-2">
+            <View className="w-5/12">
+              <Text style={{ fontSize: 12, color: "gray" }}>
+                (breakfast, lunch, dinner)
+              </Text>
+              <TextInput
+                placeholder="Enter repas"
+                onChangeText={(text) => setRepas(text)}
+                value={repas}
+              />
+            </View>
+            <View className="w-1/2">
+              <Text style={{ fontSize: 12, color: "gray" }}>Location </Text>
+              <TextInput
+                placeholder="Enter location"
+                onChangeText={(text) => setLocation(text)}
+                value={location}
+              />
+            </View>
+          </View>
+          <View className="flex flex-row justify-between">
+            <Text
+              style={{
+                color: "gray",
+                fontSize: 18,
+                textAlign: "center",
+                textAlignVertical: "center",
+                marginTop: 5,
+              }}
+            >
+              Price €{" "}
+            </Text>
+            <TextInput
+              placeholder="Enter price"
+              onChangeText={(text) => setPrice(text)}
+              value={price}
+              keyboardType="numeric"
+              className="w-3/4"
             />
           </View>
-        )}
 
-        {show && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={dateTime}
-            mode={mode}
-            is24Hour={true}
-            onChange={onChange}
-          />
-        )}
-        <TextInput
-          placeholder="Enter repas"
-          onChangeText={(text) => setRepas(text)}
-          value={repas}
-        />
-        <TextInput
-          placeholder="Enter location"
-          onChangeText={(text) => setLocation(text)}
-          value={location}
-        />
-
-        <View style={{ flexDirection: "row" }}>
-          <Text
-            style={{
-              fontSize: 18,
-
-              color: "#202020",
-              textAlign: "center",
-              textAlignVertical: "center",
-              marginTop: 5,
-            }}
-          >
-            Price €{" "}
-          </Text>
-          <TextInput
-            placeholder="Enter price"
-            onChangeText={(text) => setPrice(text)}
-            value={price}
-            keyboardType="numeric"
-          />
-        </View>
-
-        <View className="flex flex-row mb-5">
-          <Button className="m-3" label="save" onPress={savefood} />
-          <Button className="m-3" label="show" onPress={showFood} />
-          <Button className="m-3" label="clear" onPress={clearDB} />
-          <Button className="m-3" label="delete" onPress={deleteDB} />
+          <View className=" items-center my-4">
+            <Pressable
+              onPress={saveFood}
+              style={{
+                width: 320,
+                height: 48,
+                borderRadius: 16,
+                backgroundColor: "#FFC53D",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text>Save Change</Text>
+            </Pressable>
+            {/* <Button className="m-3" label="show" onPress={showFood} />
+            <Button className="m-3" label="clear" onPress={clearDB} />
+            <Button className="m-3" label="delete" onPress={deleteDB} /> */}
+          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
