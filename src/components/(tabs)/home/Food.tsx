@@ -36,6 +36,13 @@ export function ImageViewer({
   );
 }
 
+const backToHome = () => {
+  router.dismissAll();
+  setTimeout(() => {
+    router.push("/(tabs)/home");
+  }, 0);
+};
+
 export function Button({
   label,
   theme,
@@ -88,7 +95,6 @@ const Food = ({ id }: { id: string }) => {
           (_, { rows }) => {
             if (rows.length > 0) {
               const food = rows.item(0);
-              console.log(food);
               setImage(food.picture);
               setName(food.name);
               setCalories(food.calories);
@@ -146,73 +152,73 @@ const Food = ({ id }: { id: string }) => {
   };
 
   const saveFood = () => {
-    // if (!calories) {
-    //   setCalories(macros?.F! * 9 + macros?.P! * 4 + macros?.C! * 4);
-    // }
-    //make sure name is not empty, if yes alert the user
-    if (!name) {
-      alert("please enter name");
-      return;
+    try {
+      console.log(image);
+      if (!name) {
+        alert("Please enter food name");
+        return;
+      }
+
+      if (!image) {
+        console.log("no image");
+        console.log("placeholder image", PlaceholderImage);
+      }
+
+      const args = [
+        name,
+        calories == 0
+          ? macros?.F! * 9 + macros?.P! * 4 + macros?.C! * 4
+          : calories || 0,
+        JSON.stringify(macros),
+        dateTime.toISOString(),
+        location,
+        price.toString() || "",
+        image?.toString() || "",
+        1,
+        repas,
+      ];
+      if (id !== "new") {
+        console.log("updating", id);
+        db.transaction((tx) => {
+          tx.executeSql(
+            "UPDATE FOOD SET name = ?, calories = ?, macros = ?, time = ?, location = ?, price = ?, picture = ?, user_id = ?, repas = ? WHERE id = ?",
+            [...args, id],
+            (_, { rows }) => {
+              console.log(rows);
+              backToHome();
+            },
+            (_, error) => {
+              console.log("error", error);
+              return true;
+            }
+          );
+        });
+      } else {
+        console.log("inserting");
+        db.transaction((tx) => {
+          tx.executeSql(
+            "INSERT INTO FOOD (name, calories, macros, time, location, price, picture, user_id, repas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            args,
+            (_, { rows }) => {
+              console.log(rows);
+              backToHome();
+            },
+            (_, error) => {
+              console.log(error);
+              return true;
+            }
+          );
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
 
-    if (id !== "new" && db) {
-      db.transaction((tx) => {
-        tx.executeSql(
-          "UPDATE FOOD SET name = ?, calories = ?, macros = ?, time = ?, location = ?, price = ?, picture = ?, repas = ? WHERE id = ?",
-          [
-            name,
-            calories == 0
-              ? macros?.F! * 9 + macros?.P! * 4 + macros?.C! * 4
-              : calories,
-            JSON.stringify(macros),
-            dateTime.toISOString(),
-            location,
-            price,
-            image?.toString() || "",
-            repas,
-            id,
-          ],
-          (_, { rows }) => {
-            console.log(rows);
-          },
-          (_, error) => {
-            console.log(error);
-            return true;
-          }
-        );
-      });
-    } else {
-      db.transaction((tx) => {
-        tx.executeSql(
-          "INSERT INTO FOOD (name, calories, macros, time, location, price, picture, user_id, repas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-          [
-            name,
-            calories == 0
-              ? macros?.F! * 9 + macros?.P! * 4 + macros?.C! * 4
-              : calories,
-            JSON.stringify(macros),
-            dateTime.toISOString(),
-            location,
-            price,
-            image?.toString() || "",
-            1,
-            repas,
-          ],
-          (_, { rows }) => {
-            console.log(rows);
-          },
-          (_, error) => {
-            console.log(error);
-            return true;
-          }
-        );
-      });
-    }
     //https://github.com/expo/expo/issues/26922#issuecomment-1996862878
-    router.dismissAll();
-    setTimeout(() => {
-      router.push("/(tabs)/home");
-    }, 0);
+    // router.dismissAll();
+    // setTimeout(() => {
+    //   router.push("/(tabs)/home");
+    // }, 0);
   };
   const [dateTime, setDateTime] = useState(new Date());
   const [mode, setMode] = useState<any>("date");
@@ -241,9 +247,17 @@ const Food = ({ id }: { id: string }) => {
 
   const clearDB = () => {
     db.transaction((tx) => {
-      tx.executeSql("DELETE FROM FOOD", [], (_, { rows }) => {
-        console.log(rows);
-      });
+      tx.executeSql(
+        "DELETE FROM FOOD",
+        [],
+        (_, { rows }) => {
+          console.log(rows);
+        },
+        (_, error) => {
+          console.log(error);
+          return true;
+        }
+      );
     });
   };
 
@@ -254,6 +268,7 @@ const Food = ({ id }: { id: string }) => {
         [id],
         (_, { rows }) => {
           console.log(rows);
+          backToHome();
         },
         (_, error) => {
           console.log(error);
@@ -261,10 +276,10 @@ const Food = ({ id }: { id: string }) => {
         }
       );
     });
-    router.dismissAll();
-    setTimeout(() => {
-      router.push("/(tabs)/home");
-    }, 0);
+    // router.dismissAll();
+    // setTimeout(() => {
+    //   router.push("/(tabs)/home");
+    // }, 0);
   };
 
   const [keyboardShown, setKeyboardShown] = useState(false);
@@ -461,13 +476,27 @@ const Food = ({ id }: { id: string }) => {
                 backgroundColor: "#FFC53D",
                 justifyContent: "center",
                 alignItems: "center",
+                marginBottom: 16,
               }}
             >
               <Text>Save Change</Text>
             </Pressable>
-            {/* <Button className="m-3" label="show" onPress={showFood} />
+            <Pressable
+              onPress={deleteDB}
+              style={{
+                width: 320,
+                height: 48,
+                borderRadius: 16,
+                backgroundColor: "#FFC53D",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 16,
+              }}
+            >
+              <Text>Delete it</Text>
+            </Pressable>
+            <Button className="m-3" label="show" onPress={showFood} />
             <Button className="m-3" label="clear" onPress={clearDB} />
-            <Button className="m-3" label="delete" onPress={deleteDB} /> */}
           </View>
         </View>
       </ScrollView>

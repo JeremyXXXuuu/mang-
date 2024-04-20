@@ -3137,21 +3137,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/datetimepicker@npm:7.6.1":
-  version: 7.6.1
-  resolution: "@react-native-community/datetimepicker@npm:7.6.1"
+"@react-native-community/datetimepicker@npm:^7.7.0":
+  version: 7.7.0
+  resolution: "@react-native-community/datetimepicker@npm:7.7.0"
   dependencies:
     invariant: "npm:^2.2.4"
-  checksum: 10c0/20d9b35747532e2031b981305f16998e1bd4c651e2c44cd65c4dd5bd4ebe66fd0ed49292bc6883821faf56c1cb3698b16c2b8fb1e9782b8c6f00f3506cf8ee55
-  languageName: node
-  linkType: hard
-
-"@react-native-community/datetimepicker@patch:@react-native-community/datetimepicker@npm%3A7.6.1#~/.yarn/patches/@react-native-community-datetimepicker-npm-7.6.1-2f49d85c3b.patch":
-  version: 7.6.1
-  resolution: "@react-native-community/datetimepicker@patch:@react-native-community/datetimepicker@npm%3A7.6.1#~/.yarn/patches/@react-native-community-datetimepicker-npm-7.6.1-2f49d85c3b.patch::version=7.6.1&hash=53efcc"
-  dependencies:
-    invariant: "npm:^2.2.4"
-  checksum: 10c0/c117f8bec6f21be2971ae9f687cb5fa56fc1c0ff8a2f9fff7f987e3a8f8429db51fd0abe6d347aad77f27cc8dba79b7065bee56f6b03d773dac23bf157311b20
+  checksum: 10c0/c757d4a4d4d6af32a1ef96fb989235d2f3db8234a6ebc5278b50718d5b1ff9a3e72a7bf8c6dcfa1eb148b2bdc408f8db0ad03dae693dc7ad066cfa716bbb3346
   languageName: node
   linkType: hard
 
@@ -8557,7 +8548,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.20.0"
     "@expo/vector-icons": "npm:^14.0.0"
-    "@react-native-community/datetimepicker": "patch:@react-native-community/datetimepicker@npm%3A7.6.1#~/.yarn/patches/@react-native-community-datetimepicker-npm-7.6.1-2f49d85c3b.patch"
+    "@react-native-community/datetimepicker": "npm:^7.7.0"
     "@react-navigation/native": "npm:^6.0.2"
     "@shopify/flash-list": "npm:1.6.3"
     "@tamagui/babel-plugin": "npm:^1.94.4"

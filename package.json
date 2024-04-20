@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
-    "@react-native-community/datetimepicker": "patch:@react-native-community/datetimepicker@npm%3A7.6.1#~/.yarn/patches/@react-native-community-datetimepicker-npm-7.6.1-2f49d85c3b.patch",
+    "@react-native-community/datetimepicker": "^7.7.0",
     "@react-navigation/native": "^6.0.2",
     "@shopify/flash-list": "1.6.3",
     "@tamagui/config": "^1.94.4",
