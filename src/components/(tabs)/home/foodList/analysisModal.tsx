@@ -123,18 +123,21 @@ const AnalysisModal = ({
               label={"%"}
               items={Items}
               onChange={(value) => setCarbs(value as number)}
+              activeTextColor={"#FFC53D"}
             />
             <WheelPicker
               initialValue={protein}
               label={"%"}
               items={Items}
               onChange={(value) => setProtein(value as number)}
+              activeTextColor={"#FFC53D"}
             />
             <WheelPicker
               initialValue={fat}
               label={"%"}
               items={Items}
               onChange={(value) => setFat(value as number)}
+              activeTextColor={"#FFC53D"}
             />
           </View>
         </Incubator.Dialog>

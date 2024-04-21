@@ -7,9 +7,10 @@ import {
   KeyboardAvoidingView,
   Platform,
   Keyboard,
+  TouchableOpacity,
 } from "react-native";
 import { TextInput, Text, View } from "@/src/components/Themed";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 const PlaceholderImage = require("@/assets/images/placeholderImage.png");
 import * as SQLite from "expo-sqlite";
@@ -17,6 +18,7 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
+import SelectRepasModal from "@/src/components/(tabs)/home/SelectRepas";
 
 export function ImageViewer({
   placeholderImageSource,
@@ -316,6 +318,12 @@ const Food = ({ id }: { id: string }) => {
     setScrollY(currentScrollY);
   };
 
+  const [showDialog, setShowDialog] = useState(false);
+
+  const onSelectRepasPress = useCallback(() => {
+    setShowDialog(true);
+  }, []);
+
   return (
     <KeyboardAvoidingView
       behavior="padding"
@@ -429,11 +437,20 @@ const Food = ({ id }: { id: string }) => {
             <View className="w-5/12">
               <Text style={{ fontSize: 12, color: "gray" }}>
                 (breakfast, lunch, dinner)
+                <TouchableOpacity onPress={onSelectRepasPress}>
+                  <Text>select meals</Text>
+                </TouchableOpacity>
               </Text>
               <TextInput
                 placeholder="Enter repas"
                 onChangeText={(text) => setRepas(text)}
                 value={repas}
+              />
+
+              <SelectRepasModal
+                showDialog={showDialog}
+                setShowDialog={setShowDialog}
+                setRepas={setRepas}
               />
             </View>
             <View className="w-1/2">
