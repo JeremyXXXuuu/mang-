@@ -18,7 +18,7 @@ const Items = _.times(21, (i) => i * 5).map((day) => ({
   align: WheelPickerAlign.RIGHT,
 }));
 
-const AnalysisModal = ({
+export const AnalysisModal = ({
   showDialog,
   setShowDialog,
   setBase,
@@ -145,5 +145,3 @@ const AnalysisModal = ({
     </View>
   );
 };
-
-export default AnalysisModal;

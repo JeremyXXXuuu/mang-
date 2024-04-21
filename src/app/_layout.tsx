@@ -7,8 +7,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import * as SQLite from "expo-sqlite";
-const db = SQLite.openDatabase("db.db");
+import { createTables } from "@/src/db";
 
 import { useColorScheme } from "@/src/components/useColorScheme";
 
@@ -35,20 +34,13 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        "CREATE TABLE IF NOT EXISTS FOOD (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, calories INTEGER, macros TEXT, time TEXT, location TEXT, price TEXT, picture TEXT, user_id INTEGER, repas TEXT)",
-        [],
-        (_, { rows }) => {
-          console.log("layout", rows);
-        },
-        (_, error) => {
-          console.log(error);
-          return true;
-        }
-      );
-      console.log("table created");
-    });
+    createTables()
+      .then(() => {
+        console.log("init food table success");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   useEffect(() => {

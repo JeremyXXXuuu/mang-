@@ -3,7 +3,7 @@ import React from "react";
 import CircularProgress, {
   CircularProgressBase,
 } from "react-native-circular-progress-indicator";
-import { FoodItemProps } from "../foodItem";
+import { FoodItemProps } from "../foodList/foodItem";
 
 type Base = {
   calories: number;
@@ -14,7 +14,13 @@ type Base = {
 
 const DURATION = 800;
 
-const Analysis = ({ data, base }: { data: FoodItemProps[]; base: Base }) => {
+export const Analysis = ({
+  data,
+  base,
+}: {
+  data: FoodItemProps[];
+  base: Base;
+}) => {
   const calories = data.reduce((acc, food) => acc + food.calories, 0);
   const C = data.reduce((acc, food) => acc + food.macros.C, 0);
   const P = data.reduce((acc, food) => acc + food.macros.P, 0);
@@ -102,5 +108,3 @@ const Analysis = ({ data, base }: { data: FoodItemProps[]; base: Base }) => {
     </View>
   );
 };
-
-export default Analysis;

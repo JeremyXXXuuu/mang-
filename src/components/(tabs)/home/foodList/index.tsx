@@ -1,16 +1,14 @@
 import React, { useState, useCallback } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import * as SQLite from "expo-sqlite";
 import FoodItem, { FoodItemProps } from "./foodItem";
 import { useNavigation, useFocusEffect } from "expo-router";
-import Analysis from "../foodList/Analysis/analysis";
-import AnalysisModal from "@/src/components/(tabs)/home/foodList/analysisModal";
+import { Analysis } from "@/src/components/(tabs)/home/analysis/Analysis";
+import { AnalysisModal } from "@/src/components/(tabs)/home/analysis/AnalysisModal";
+
+import { queryFoodByDate } from "@/src/db";
 
 export const MyList = ({ date }: { date: string }) => {
-  const [db, setDb] = useState<SQLite.WebSQLDatabase>(
-    SQLite.openDatabase("db.db")
-  );
   const [foodList, setFoodList] = useState<FoodItemProps[]>([]);
   const [base, setBase] = useState({
     calories: 0,
@@ -23,26 +21,14 @@ export const MyList = ({ date }: { date: string }) => {
 
   useFocusEffect(
     useCallback(() => {
-      db.transaction((tx) => {
-        tx.executeSql(
-          // "SELECT * FROM FOOD",
-          // [],
-          "SELECT * FROM FOOD WHERE time LIKE ?",
-          [`${date}%`],
-          (_, { rows }) => {
-            // macros is a string in the db, we need to parse it
-            rows._array.forEach((food: any) => {
-              food.macros = JSON.parse(food.macros);
-            });
-            setFoodList(rows._array);
-          },
-          (_, error) => {
-            console.log(error);
-            return true;
-          }
-        );
-      });
-    }, [date, db])
+      queryFoodByDate(date)
+        .then((data) => {
+          setFoodList(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }, [date])
   );
   const [showDialog, setShowDialog] = useState(false);
 

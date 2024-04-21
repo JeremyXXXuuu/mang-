@@ -13,12 +13,12 @@ import { TextInput, Text, View } from "@/src/components/Themed";
 import React, { useCallback, useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 const PlaceholderImage = require("@/assets/images/placeholderImage.png");
-import * as SQLite from "expo-sqlite";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
-import SelectRepasModal from "@/src/components/(tabs)/home/SelectRepas";
+import SelectRepasModal from "@/src/components/(tabs)/home/food/SelectRepas";
+import * as db from "@/src/db";
 
 export function ImageViewer({
   placeholderImageSource,
@@ -84,31 +84,23 @@ const Food = ({ id }: { id: string }) => {
   const [location, setLocation] = useState("");
   const [price, setPrice] = useState("");
 
-  const [db, setDb] = useState<SQLite.WebSQLDatabase>(
-    SQLite.openDatabase("db.db")
-  );
-
   useEffect(() => {
     if (id !== "new" && db) {
-      db.transaction((tx) => {
-        tx.executeSql(
-          "SELECT * FROM FOOD WHERE id = ?",
-          [id],
-          (_, { rows }) => {
-            if (rows.length > 0) {
-              const food = rows.item(0);
-              setImage(food.picture);
-              setName(food.name);
-              setCalories(food.calories);
-              setMacros(JSON.parse(food.macros));
-              setDateTime(new Date(food.time));
-              setRepas(food.repas);
-              setLocation(food.location);
-              setPrice(food.price);
-            }
-          }
-        );
-      });
+      db.queryFoodById(id)
+        .then((data) => {
+          console.log(data);
+          setName(data.name);
+          setCalories(data.calories);
+          setMacros(data.macros);
+          setRepas(data.repas);
+          setLocation(data.location);
+          setPrice(data.price);
+          setImage(data.picture);
+          setDateTime(new Date(data.time));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }, [db]);
 
@@ -136,20 +128,8 @@ const Food = ({ id }: { id: string }) => {
   };
 
   const showFood = () => {
-    console.log("showing food");
-    db.transaction((tx) => {
-      tx.executeSql(
-        "SELECT * FROM FOOD",
-        [],
-        (_, { rows }) => {
-          setFood(rows._array);
-          console.log(rows._array);
-        },
-        (_, error) => {
-          console.log(error);
-          return true;
-        }
-      );
+    db.queryAllFood().catch((error) => {
+      console.log(error);
     });
   };
 
@@ -181,36 +161,22 @@ const Food = ({ id }: { id: string }) => {
       ];
       if (id !== "new") {
         console.log("updating", id);
-        db.transaction((tx) => {
-          tx.executeSql(
-            "UPDATE FOOD SET name = ?, calories = ?, macros = ?, time = ?, location = ?, price = ?, picture = ?, user_id = ?, repas = ? WHERE id = ?",
-            [...args, id],
-            (_, { rows }) => {
-              console.log(rows);
-              backToHome();
-            },
-            (_, error) => {
-              console.log("error", error);
-              return true;
-            }
-          );
-        });
+        db.updateFood(id, args)
+          .then(() => {
+            backToHome();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } else {
         console.log("inserting");
-        db.transaction((tx) => {
-          tx.executeSql(
-            "INSERT INTO FOOD (name, calories, macros, time, location, price, picture, user_id, repas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            args,
-            (_, { rows }) => {
-              console.log(rows);
-              backToHome();
-            },
-            (_, error) => {
-              console.log(error);
-              return true;
-            }
-          );
-        });
+        db.insertFood(args)
+          .then(() => {
+            backToHome();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     } catch (error) {
       console.log(error);
@@ -248,40 +214,19 @@ const Food = ({ id }: { id: string }) => {
   };
 
   const clearDB = () => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        "DELETE FROM FOOD",
-        [],
-        (_, { rows }) => {
-          console.log(rows);
-        },
-        (_, error) => {
-          console.log(error);
-          return true;
-        }
-      );
+    db.clearDBAll().catch((error) => {
+      console.log(error);
     });
   };
 
-  const deleteDB = () => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        "DELETE FROM FOOD WHERE id = ?",
-        [id],
-        (_, { rows }) => {
-          console.log(rows);
-          backToHome();
-        },
-        (_, error) => {
-          console.log(error);
-          return true;
-        }
-      );
-    });
-    // router.dismissAll();
-    // setTimeout(() => {
-    //   router.push("/(tabs)/home");
-    // }, 0);
+  const deleteFood = () => {
+    db.deleteFood(id)
+      .then(() => {
+        backToHome();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const [keyboardShown, setKeyboardShown] = useState(false);
@@ -499,7 +444,7 @@ const Food = ({ id }: { id: string }) => {
               <Text>Save Change</Text>
             </Pressable>
             <Pressable
-              onPress={deleteDB}
+              onPress={deleteFood}
               style={{
                 width: 320,
                 height: 48,

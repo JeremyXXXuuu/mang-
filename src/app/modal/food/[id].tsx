@@ -3,7 +3,7 @@ import { Platform, StyleSheet } from "react-native";
 import { Link, router, useLocalSearchParams } from "expo-router";
 
 import { Text, View } from "@/src/components/Themed";
-import Food from "@/src/components/(tabs)/home/Food";
+import Food from "@/src/components/(tabs)/home/food/Food";
 
 export default function FoodModalScreen() {
   const { id } = useLocalSearchParams() as { id: string };
