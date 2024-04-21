@@ -17,12 +17,14 @@ const rightArrowIcon = require("./next.png");
 const ITEMS: any[] = agendaItems;
 
 import { MyList } from "../foodList";
+import { Home } from "../Home";
+import AddButton from "../../AddButton";
 
 interface Props {
   weekView?: boolean;
 }
 
-const ExpandableCalendarScreen = (props: Props) => {
+export const ExpandableCalendarScreen = (props: Props) => {
   const [date, setDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
@@ -92,13 +94,12 @@ const ExpandableCalendarScreen = (props: Props) => {
         // dayFormat={'yyyy-MM-d'}
       /> */}
       <View className="">
-        <MyList date={date} />
+        {/* <MyList date={date} /> */}
+        <Home date={date} />
       </View>
     </CalendarProvider>
   );
 };
-
-export default ExpandableCalendarScreen;
 
 const styles = StyleSheet.create({
   calendar: {

@@ -7,7 +7,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { createFOODTables } from "@/src/db";
+import { createFOODTables, createUserBodyTable } from "@/src/db";
 
 import { useColorScheme } from "@/src/components/useColorScheme";
 
@@ -37,6 +37,13 @@ export default function RootLayout() {
     createFOODTables()
       .then(() => {
         console.log("init food table success");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    createUserBodyTable()
+      .then(() => {
+        console.log("init user body table success");
       })
       .catch((error) => {
         console.error(error);

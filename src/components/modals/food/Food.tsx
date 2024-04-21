@@ -17,7 +17,7 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
-import SelectRepasModal from "@/src/components/(tabs)/home/food/SelectRepas";
+import SelectRepasModal from "@/src/components/modals/food/SelectRepas";
 import * as db from "@/src/db";
 
 export function ImageViewer({

@@ -10,6 +10,7 @@ import _ from "lodash";
 import { FontAwesome } from "@expo/vector-icons";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TextInput } from "@/src/components/Themed";
+import { UserBody, upsertUserBody } from "@/src/db";
 
 const Items = _.times(21, (i) => i * 5).map((day) => ({
   label: `${day}`,
@@ -22,10 +23,12 @@ export const AnalysisModal = ({
   showDialog,
   setShowDialog,
   setBase,
+  date,
 }: {
   showDialog: boolean;
   setShowDialog: Function;
   setBase: Function;
+  date: string;
 }) => {
   const [carbs, setCarbs] = useState(50);
   const [protein, setProtein] = useState(30);
@@ -65,10 +68,33 @@ export const AnalysisModal = ({
           fat: Math.round((calories * fat) / 100 / 9),
         })
       );
+
+      const userBodyData: UserBody = {
+        date: date,
+        weight: 0,
+        height: 0,
+        body_fat_percentage: 0,
+        calories: 0,
+        macros: JSON.stringify({
+          carbs: 0,
+          protein: 0,
+          fat: 0,
+        }),
+        calories_goal: calories,
+        macros_goal: JSON.stringify({
+          carbs: Math.round((calories * carbs) / 100 / 4),
+          protein: Math.round((calories * protein) / 100 / 4),
+          fat: Math.round((calories * fat) / 100 / 9),
+        }),
+        activity: "",
+        notes: "",
+      };
+      console.log(userBodyData);
+      upsertUserBody(userBodyData);
     } else {
       alert("The sum of the values must be 100");
     }
-  }, [fat, carbs, protein, calories, setBase]);
+  }, [fat, carbs, protein, calories, setBase, date]);
 
   return (
     <View>
