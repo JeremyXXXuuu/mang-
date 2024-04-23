@@ -13,13 +13,15 @@
                 "image": "default",
                 "env": {
                     "PLATFORM": "android"
-                }
+                },
+                "distribution": "internal"
             },
             "ios": {
                 "image": "latest",
                 "env": {
                     "PLATFORM": "ios"
-                }
+                },
+                "distribution": "internal"
             }
         },
         "development": {
@@ -29,7 +31,11 @@
         "preview": {
             "distribution": "internal"
         },
-        "production": {}
+        "production": {
+            "ios": {
+                "distribution": "internal"
+            }
+        }
     },
     "submit": {
         "production": {}
