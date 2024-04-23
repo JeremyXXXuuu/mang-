@@ -7,10 +7,19 @@ import { Analysis } from "@/src/components/(tabs)/home/analysis/Analysis";
 import { AnalysisModal } from "@/src/components/(tabs)/home/analysis/AnalysisModal";
 
 import { getAllUserBody, getUserBody, queryFoodByDate } from "@/src/db";
+import _ from "lodash";
+
+type AnalysisModalBase = {
+  calories: number;
+  carbs: number;
+  protein: number;
+  fat: number;
+};
 
 export const MyList = ({ date }: { date: string }) => {
   const [foodList, setFoodList] = useState<FoodItemProps[]>([]);
-  const [base, setBase] = useState({
+
+  const [base, setBase] = useState<AnalysisModalBase>({
     calories: 0,
     carbs: 0,
     protein: 0,
@@ -61,6 +70,7 @@ export const MyList = ({ date }: { date: string }) => {
         <AnalysisModal
           showDialog={showDialog}
           setShowDialog={setShowDialog}
+          base={base}
           setBase={setBase}
           date={date}
         />

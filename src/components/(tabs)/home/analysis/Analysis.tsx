@@ -27,9 +27,9 @@ export const Analysis = ({
   const F = data.reduce((acc, food) => acc + food.macros.F, 0);
 
   const totalCalories = base.calories;
-  const totalC = base.carbs;
-  const totalP = base.protein;
-  const totalF = base.fat;
+  const totalC = Math.round((totalCalories * base.carbs) / 100 / 4);
+  const totalP = Math.round((totalCalories * base.protein) / 100 / 4);
+  const totalF = Math.round((totalCalories * base.fat) / 100 / 9);
 
   return (
     <View className="flex flex-row justify-evenly mt-2">

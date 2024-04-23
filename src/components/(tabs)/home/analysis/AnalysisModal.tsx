@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Incubator,
@@ -12,6 +12,13 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TextInput } from "@/src/components/Themed";
 import { UserBody, upsertUserBody } from "@/src/db";
 
+type AnalysisModalBase = {
+  calories: number;
+  carbs: number;
+  protein: number;
+  fat: number;
+};
+
 const Items = _.times(21, (i) => i * 5).map((day) => ({
   label: `${day}`,
   value: day,
@@ -22,11 +29,13 @@ const Items = _.times(21, (i) => i * 5).map((day) => ({
 export const AnalysisModal = ({
   showDialog,
   setShowDialog,
+  base,
   setBase,
   date,
 }: {
   showDialog: boolean;
   setShowDialog: Function;
+  base: AnalysisModalBase;
   setBase: Function;
   date: string;
 }) => {
@@ -34,6 +43,13 @@ export const AnalysisModal = ({
   const [protein, setProtein] = useState(30);
   const [fat, setFat] = useState(20);
   const [calories, setCalories] = useState(2000);
+
+  useEffect(() => {
+    setCarbs(base.carbs);
+    setProtein(base.protein);
+    setFat(base.fat);
+    setCalories(base.calories);
+  }, [base]);
 
   const [macrosPercentage, setMacrosPercentage] = useState({
     carbs: 50,
@@ -54,18 +70,12 @@ export const AnalysisModal = ({
     if (fat + carbs + protein == 100) {
       setShowDialog(false);
       setMacrosPercentage({ carbs, protein, fat });
-      console.log({
-        calories: calories,
-        carbs: Math.round((calories * carbs) / 100 / 4),
-        protein: Math.round((calories * protein) / 100 / 4),
-        fat: Math.round((calories * fat) / 100 / 9),
-      });
       setBase(
         _.cloneDeep({
           calories: calories,
-          carbs: Math.round((calories * carbs) / 100 / 4),
-          protein: Math.round((calories * protein) / 100 / 4),
-          fat: Math.round((calories * fat) / 100 / 9),
+          carbs: carbs,
+          protein: protein,
+          fat: fat,
         })
       );
 
@@ -82,9 +92,9 @@ export const AnalysisModal = ({
         }),
         calories_goal: calories,
         macros_goal: JSON.stringify({
-          carbs: Math.round((calories * carbs) / 100 / 4),
-          protein: Math.round((calories * protein) / 100 / 4),
-          fat: Math.round((calories * fat) / 100 / 9),
+          carbs: carbs,
+          protein: protein,
+          fat: fat,
         }),
         activity: "",
         notes: "",
