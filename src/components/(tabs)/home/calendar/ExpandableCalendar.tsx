@@ -1,5 +1,5 @@
-import React, { useRef, useCallback, useState } from "react";
-import { StyleSheet } from "react-native";
+import React, { useRef, useCallback, useState, useEffect } from "react";
+import { StyleSheet, useColorScheme } from "react-native";
 import {
   ExpandableCalendar,
   AgendaList,
@@ -24,14 +24,39 @@ interface Props {
   weekView?: boolean;
 }
 
+const themes = {
+  light: {
+    calendarBackground: "white",
+    dayTextColor: "black",
+    monthTextColor: "black",
+    textDisabledColor: "grey",
+  },
+  dark: {
+    calendarBackground: "black",
+    dayTextColor: "white",
+    monthTextColor: "white",
+    textDisabledColor: "grey",
+  },
+};
+
 export const ExpandableCalendarScreen = (props: Props) => {
   const [date, setDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
 
+  const colorTheme = useColorScheme() ?? "light";
+  const [{ key, theme }, setTheme] = useState({
+    key: colorTheme,
+    theme: themes[colorTheme],
+  });
+
+  useEffect(() => {
+    setTheme({ key: colorTheme, theme: themes[colorTheme] });
+  }, [colorTheme]);
+
   const { weekView } = props;
   const marked = useRef(getMarkedDates());
-  const theme = useRef(getTheme());
+  // const theme = useRef(getTheme());
   const todayBtnTheme = useRef({
     todayButtonTextColor: themeColor,
   });
@@ -76,7 +101,8 @@ export const ExpandableCalendarScreen = (props: Props) => {
           // calendarStyle={styles.calendar}
           // headerStyle={styles.header} // for horizontal only
           // disableWeekScroll
-          theme={theme.current}
+          theme={theme}
+          key={key}
           // disableAllTouchEventsForDisabledDays
           firstDay={1}
           markedDates={marked.current}

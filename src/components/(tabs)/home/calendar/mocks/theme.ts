@@ -39,5 +39,17 @@ export function getTheme() {
     selectedDotColor: "white",
     disabledDotColor: disabledColor,
     dotStyle: { marginTop: -2 },
+    light: {
+      calendarBackground: "white",
+      dayTextColor: "black",
+      monthTextColor: "black",
+      textDisabledColor: "grey",
+    },
+    dark: {
+      calendarBackground: "black",
+      dayTextColor: "white",
+      monthTextColor: "white",
+      textDisabledColor: "grey",
+    },
   };
 }

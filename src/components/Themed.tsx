@@ -9,6 +9,7 @@ import {
   View as DefaultView,
   TextInput as DefaultTextInput,
 } from "react-native";
+import { SegmentedControl as DefaultSegmentedControl } from "react-native-ui-lib";
 
 import Colors from "@/src/constants/Colors";
 import { useColorScheme } from "./useColorScheme";
@@ -21,6 +22,7 @@ type ThemeProps = {
 export type TextProps = ThemeProps & DefaultText["props"];
 export type ViewProps = ThemeProps & DefaultView["props"];
 export type TextInputProps = ThemeProps & DefaultTextInput["props"];
+export type SegmentedControlProps = ThemeProps & any;
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -56,11 +58,41 @@ export function View(props: ViewProps) {
 export function TextInput(props: TextInputProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+  const backgroundColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "TextInputBackground"
+  );
+  console.log("backgroundColor", backgroundColor);
 
   return (
     <DefaultTextInput
-      style={[commonStyle.textInput, { color }, style]}
+      style={[commonStyle.textInput, { color, backgroundColor }, style]}
       {...otherProps}
+    />
+  );
+}
+
+export function SegmentedControl(props: SegmentedControlProps) {
+  //define backgroundColor, activeColor, activeBackgroundColor, based on light or dark mode
+  const backgroundColor = useThemeColor(
+    { light: props.lightColor, dark: props.darkColor },
+    "background"
+  );
+  const activeColor = useThemeColor(
+    { light: props.lightColor, dark: props.darkColor },
+    "text"
+  );
+  const activeBackgroundColor = useThemeColor(
+    { light: props.lightColor, dark: props.darkColor },
+    "activeBackgroundColor"
+  );
+
+  return (
+    <DefaultSegmentedControl
+      backgroundColor={backgroundColor}
+      activeColor={activeColor}
+      activeBackgroundColor={activeBackgroundColor}
+      {...props}
     />
   );
 }
@@ -74,6 +106,5 @@ const commonStyle = StyleSheet.create({
     fontSize: 16,
     padding: 6,
     fontWeight: "400",
-    backgroundColor: "#fff",
   },
 });

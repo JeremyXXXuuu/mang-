@@ -3,12 +3,12 @@ import React from "react";
 import { ExpandableCalendarScreen } from "@/src/components/(tabs)/home/calendar/ExpandableCalendar";
 import {
   Colors,
-  SegmentedControl,
   Assets,
   Spacings,
   BorderRadiuses,
   Typography,
 } from "react-native-ui-lib";
+import { SegmentedControl } from "@/src/components/Themed";
 
 const segments = {
   "FOOD&BODY": [{ label: "Food" }, { label: "Body" }],
@@ -33,9 +33,6 @@ export const Home = ({ date }: { date: string }) => {
     <View className="h-full">
       <SegmentedControl
         segments={segments["FOOD&BODY"]}
-        backgroundColor="#f5f5f5"
-        activeColor={Colors.blue30}
-        activeBackgroundColor="#ffffff"
         borderRadius={BorderRadiuses.br100}
         containerStyle={{ margin: Spacings.s2 }}
         onChangeIndex={onChangeIndex}

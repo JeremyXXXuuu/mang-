@@ -1,16 +1,13 @@
-import { Text, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  View,
-  Incubator,
-  WheelPicker,
-  WheelPickerAlign,
-} from "react-native-ui-lib";
+import { Incubator, WheelPicker, WheelPickerAlign } from "react-native-ui-lib";
 import _ from "lodash";
 import { FontAwesome } from "@expo/vector-icons";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { TextInput } from "@/src/components/Themed";
 import { UserBody, upsertUserBody } from "@/src/db";
+import { useColorScheme } from "@/src/components/useColorScheme";
+import Colors from "@/src/constants/Colors";
+import { View, Text, TextInput } from "@/src/components/Themed";
 
 type AnalysisModalBase = {
   calories: number;
@@ -44,23 +41,16 @@ export const AnalysisModal = ({
   const [fat, setFat] = useState(20);
   const [calories, setCalories] = useState(2000);
 
+  const theme = useColorScheme() ?? "light";
+  const backgroundColor =
+    theme === "light" ? Colors.light.background : Colors.dark.background;
+
   useEffect(() => {
     setCarbs(base.carbs);
     setProtein(base.protein);
     setFat(base.fat);
     setCalories(base.calories);
   }, [base]);
-
-  const [macrosPercentage, setMacrosPercentage] = useState({
-    carbs: 50,
-    protein: 30,
-    fat: 20,
-  });
-  const [macros, setMacros] = useState({
-    carbs: 0,
-    protein: 0,
-    fat: 0,
-  });
 
   const onDialogDismissed = useCallback(() => {
     setShowDialog(false);
@@ -69,7 +59,6 @@ export const AnalysisModal = ({
   const checkPicker = useCallback(() => {
     if (fat + carbs + protein == 100) {
       setShowDialog(false);
-      setMacrosPercentage({ carbs, protein, fat });
       setBase(
         _.cloneDeep({
           calories: calories,
@@ -118,6 +107,11 @@ export const AnalysisModal = ({
             showKnob: false,
             showDivider: false,
           }}
+          containerStyle={{
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            backgroundColor: backgroundColor,
+          }}
         >
           <Incubator.Dialog.Header
             title={"Total: " + (carbs + protein + fat) + "%"}
@@ -126,7 +120,7 @@ export const AnalysisModal = ({
               color: carbs + protein + fat == 100 ? "green" : "red",
             }}
             topAccessory={
-              <View row className="justify-between">
+              <View className="flex flex-row justify-between">
                 <TouchableOpacity onPress={onDialogDismissed} className="mx-2">
                   <FontAwesome name="close" size={24} color="black" />
                 </TouchableOpacity>
@@ -138,7 +132,6 @@ export const AnalysisModal = ({
                     value={calories.toString()}
                     onChangeText={(value) => setCalories(Number(value))}
                     keyboardType="numeric"
-                    style={{ borderWidth: 1, borderColor: "black" }}
                   />
                 </View>
 
@@ -153,13 +146,23 @@ export const AnalysisModal = ({
             }
           />
 
-          <View row center>
+          <View
+            className="justify-around flex flex-row"
+            style={{
+              alignItems: "center",
+            }}
+          >
             <WheelPicker
               initialValue={carbs}
               label={"%"}
               items={Items}
               onChange={(value) => setCarbs(value as number)}
               activeTextColor={"#FFC53D"}
+              style={{
+                // backgroundColor: backgroundColor,
+                backgroundColor: "black",
+                //消除渐变
+              }}
             />
             <WheelPicker
               initialValue={protein}
