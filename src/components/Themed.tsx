@@ -62,7 +62,6 @@ export function TextInput(props: TextInputProps) {
     { light: lightColor, dark: darkColor },
     "TextInputBackground"
   );
-  console.log("backgroundColor", backgroundColor);
 
   return (
     <DefaultTextInput

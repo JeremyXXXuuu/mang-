@@ -51,24 +51,7 @@ export const Analysis = ({
         titleStyle={{ fontWeight: "800" }}
         subtitleStyle={{ fontSize: 10, fontWeight: "500" }}
       />
-      <CircularProgress
-        value={totalF == 0 ? 0 : (F / totalF) * 100}
-        radius={44}
-        title="Fat"
-        duration={DURATION}
-        progressValueColor={"#BBBBBB"}
-        activeStrokeColor={"#E592A3"} //Ruby 8
-        inActiveStrokeColor={"#E0E0E0"}
-        inActiveStrokeOpacity={0.5}
-        subtitle={`${F}/${totalF}`}
-        inActiveStrokeWidth={12}
-        activeStrokeWidth={10}
-        valueSuffix="%"
-        progressValueStyle={{ fontSize: 18, fontWeight: "800" }}
-        titleFontSize={12}
-        titleStyle={{ fontWeight: "800" }}
-        subtitleStyle={{ fontSize: 10, fontWeight: "500" }}
-      />
+
       <CircularProgress
         value={totalC == 0 ? 0 : (C / totalC) * 100}
         radius={44}
@@ -97,6 +80,24 @@ export const Analysis = ({
         inActiveStrokeColor={"#E0E0E0"}
         inActiveStrokeOpacity={0.5}
         subtitle={`${P}/${totalP}`}
+        inActiveStrokeWidth={12}
+        activeStrokeWidth={10}
+        valueSuffix="%"
+        progressValueStyle={{ fontSize: 18, fontWeight: "800" }}
+        titleFontSize={12}
+        titleStyle={{ fontWeight: "800" }}
+        subtitleStyle={{ fontSize: 10, fontWeight: "500" }}
+      />
+      <CircularProgress
+        value={totalF == 0 ? 0 : (F / totalF) * 100}
+        radius={44}
+        title="Fat"
+        duration={DURATION}
+        progressValueColor={"#BBBBBB"}
+        activeStrokeColor={"#E592A3"} //Ruby 8
+        inActiveStrokeColor={"#E0E0E0"}
+        inActiveStrokeOpacity={0.5}
+        subtitle={`${F}/${totalF}`}
         inActiveStrokeWidth={12}
         activeStrokeWidth={10}
         valueSuffix="%"

@@ -158,11 +158,6 @@ export const AnalysisModal = ({
               items={Items}
               onChange={(value) => setCarbs(value as number)}
               activeTextColor={"#FFC53D"}
-              style={{
-                // backgroundColor: backgroundColor,
-                backgroundColor: "black",
-                //消除渐变
-              }}
             />
             <WheelPicker
               initialValue={protein}

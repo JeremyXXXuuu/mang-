@@ -20,10 +20,10 @@ export const MyList = ({ date }: { date: string }) => {
   const [foodList, setFoodList] = useState<FoodItemProps[]>([]);
 
   const [base, setBase] = useState<AnalysisModalBase>({
-    calories: 0,
-    carbs: 0,
-    protein: 0,
-    fat: 0,
+    calories: 2000,
+    carbs: 50,
+    protein: 30,
+    fat: 20,
   });
   const navigation = useNavigation();
   const focused = navigation.isFocused();
@@ -39,8 +39,8 @@ export const MyList = ({ date }: { date: string }) => {
         });
       getUserBody(date)
         .then((data) => {
-          console.log(data);
           data.macros_goal = JSON.parse(data.macros_goal);
+          console.log(data.macros_goal);
           setBase({
             calories: data.calories_goal,
             carbs: data.macros_goal.carbs,
