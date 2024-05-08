@@ -1,13 +1,11 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs } from "expo-router";
+import { Link, Tabs, router } from "expo-router";
 import { Pressable } from "react-native";
 
 import Colors from "@/src/constants/Colors";
 import { useColorScheme } from "@/src/components/useColorScheme";
 import { useClientOnlyValue } from "@/src/components/useClientOnlyValue";
-
-import AddButton from "@/src/components/(tabs)/AddButton";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -61,9 +59,34 @@ export default function TabLayout() {
         options={{
           title: "body",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          // href: "/user",
+          href: null,
           headerRight,
         }}
+      />
+
+      <Tabs.Screen
+        name="addButtonTab"
+        options={{
+          headerShown: false,
+          title: "",
+          tabBarIcon: ({ focused }) => (
+            <FontAwesome
+              name="plus"
+              size={24}
+              // color={
+              //   focused
+              //     ? config.colors.PrimaryColor
+              //     : config.colors.SecondaryTextColor
+              // }
+            />
+          ),
+        }}
+        listeners={() => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            router.push("/modal/food/new"); // <-- Here you put the name where the chat component is declared
+          },
+        })}
       />
       <Tabs.Screen
         name="food/index"
@@ -71,15 +94,6 @@ export default function TabLayout() {
           title: "Food",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight,
-        }}
-      />
-
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "body",
-          // hide this tab from the tab bar
-          href: null,
         }}
       />
     </Tabs>
