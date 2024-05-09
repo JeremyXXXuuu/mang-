@@ -6,6 +6,8 @@ import { Pressable } from "react-native";
 import Colors from "@/src/constants/Colors";
 import { useColorScheme } from "@/src/components/useColorScheme";
 import { useClientOnlyValue } from "@/src/components/useClientOnlyValue";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -42,13 +44,20 @@ export default function TabLayout() {
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
+        tabBarShowLabel: false,
       }}
     >
       <Tabs.Screen
         name="home/index"
         options={{
-          title: "FOOD LOG",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Food Log",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="food-croissant"
+              size={32}
+              color={color}
+            />
+          ),
           headerRight,
           // headerShown: false,
         }}
@@ -67,12 +76,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="addButtonTab"
         options={{
-          headerShown: false,
-          title: "",
-          tabBarIcon: ({ focused }) => (
+          tabBarShowLabel: false,
+          title: "12",
+          tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+          tabBarIcon: ({ color }) => (
             <FontAwesome
               name="plus"
-              size={24}
+              size={32}
+              color={color}
               // color={
               //   focused
               //     ? config.colors.PrimaryColor
@@ -89,10 +100,12 @@ export default function TabLayout() {
         })}
       />
       <Tabs.Screen
-        name="food/index"
+        name="analytics/index"
         options={{
-          title: "Food",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "analytics",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="analytics" size={32} color={color} />
+          ),
           headerRight,
         }}
       />

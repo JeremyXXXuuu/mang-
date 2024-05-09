@@ -4,6 +4,8 @@ import { Image } from "expo-image";
 import { Pressable } from "react-native";
 import { router } from "expo-router";
 
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+
 export type FoodItemProps = {
   id: string;
   picture: string;
@@ -27,11 +29,14 @@ const CaloriesMacros = (props: {
   F: number;
 }) => {
   return (
-    <View className="flex flex-row gap-2">
-      <Text>{props.calories} cal</Text>
-      <Text>{props.C}g C </Text>
-      <Text>{props.P}g P</Text>
-      <Text>{props.F}g F</Text>
+    <View className="flex flex-row w-48 justify-between">
+      <View className="flex flex-row">
+        <Text className=" font-bold	">{props.calories} </Text>
+        <FontAwesome6 name="fire" size={16} color="black" />
+      </View>
+      <Text className=" font-semibold	">{props.C}C</Text>
+      <Text className=" font-semibold	">{props.P}P</Text>
+      <Text className=" font-semibold	">{props.F}F</Text>
     </View>
   );
 };
@@ -43,18 +48,26 @@ const onPress = (id: string) => {
 const FoodItem = (props: FoodItemProps) => {
   return (
     <Pressable onPress={() => onPress(props.id)}>
-      <View className="flex flex-row gap-2 p-2 ">
+      <View className="flex flex-row m-2">
         <View>
           <Image
             source={{ uri: props.picture }}
-            style={{ width: 150, height: 150 }}
-            className="rounded-lg"
+            style={{ width: 150, height: 100 }}
+            className="rounded-lg mr-6"
           />
         </View>
-        <View className="flex flex-col justify-evenly">
-          <Text className="text-md">{props.name}</Text>
+        <View className="flex flex-col justify-between pt-2">
+          <Text className=" font-semibold	">{props.name}</Text>
+          <View className="w-full">
+            <CaloriesMacros
+              calories={props.calories}
+              C={props.macros?.C}
+              P={props.macros?.P}
+              F={props.macros?.F}
+            />
+          </View>
 
-          <View className="flex flex-row gap-2">
+          <View className="flex flex-row w-48 justify-between">
             <Text>{props.repas}</Text>
             <Text>
               {props.time
@@ -64,15 +77,6 @@ const FoodItem = (props: FoodItemProps) => {
                 .slice(0, 2)
                 .join(":")}
             </Text>
-          </View>
-
-          <View>
-            <CaloriesMacros
-              calories={props.calories}
-              C={props.macros?.C}
-              P={props.macros?.P}
-              F={props.macros?.F}
-            />
           </View>
 
           <Text>{props.location}</Text>

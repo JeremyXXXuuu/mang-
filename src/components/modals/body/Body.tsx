@@ -457,8 +457,8 @@ const Body = ({ id }: { id: string }) => {
             >
               <Text>Delete it</Text>
             </Pressable>
-            <Button className="m-3" label="show" onPress={showFood} />
-            <Button className="m-3" label="clear" onPress={clearDB} />
+            {/* <Button className="m-3" label="show" onPress={showFood} />
+            <Button className="m-3" label="clear" onPress={clearDB} /> */}
           </View>
         </View>
       </ScrollView>

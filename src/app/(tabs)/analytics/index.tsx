@@ -1,12 +1,12 @@
 import { View, Text } from "@/src/components/Themed";
 import React from "react";
 
-const food = () => {
+const analytics = () => {
   return (
     <View>
-      <Text>food</Text>
+      <Text>analytics</Text>
     </View>
   );
 };
 
-export default food;
+export default analytics;
