@@ -64,16 +64,6 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="body/index"
-        options={{
-          title: "body",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          href: null,
-          headerRight,
-        }}
-      />
-
-      <Tabs.Screen
         name="addButtonTab"
         options={{
           tabBarShowLabel: false,
@@ -107,6 +97,13 @@ export default function TabLayout() {
             <Ionicons name="analytics" size={32} color={color} />
           ),
           headerRight,
+        }}
+      />
+      <Tabs.Screen
+        name="index"
+        options={{
+          href: null,
+          headerShown: false,
         }}
       />
     </Tabs>
