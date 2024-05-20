@@ -111,6 +111,7 @@ export const AnalysisModal = ({
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
             backgroundColor: backgroundColor,
+            alignItems: "center",
           }}
         >
           <Incubator.Dialog.Header
@@ -120,7 +121,7 @@ export const AnalysisModal = ({
               color: carbs + protein + fat == 100 ? "green" : "red",
             }}
             topAccessory={
-              <View className="flex flex-row justify-between">
+              <View className="flex flex-row justify-between w-full">
                 <TouchableOpacity onPress={onDialogDismissed} className="mx-2">
                   <FontAwesome name="close" size={24} color="black" />
                 </TouchableOpacity>
@@ -146,18 +147,20 @@ export const AnalysisModal = ({
             }
           />
 
-          <View
-            className="justify-around flex flex-row"
-            style={{
-              alignItems: "center",
-            }}
-          >
+          <View className="flex flex-row ">
             <WheelPicker
               initialValue={carbs}
               label={"%"}
               items={Items}
               onChange={(value) => setCarbs(value as number)}
               activeTextColor={"#FFC53D"}
+              // style={{
+              //   backgroundColor: "gray",
+              // }}
+              // faderProps={{
+              //   size: 50,
+              //   tintColor: "black",
+              // }}
             />
             <WheelPicker
               initialValue={protein}
@@ -165,6 +168,13 @@ export const AnalysisModal = ({
               items={Items}
               onChange={(value) => setProtein(value as number)}
               activeTextColor={"#FFC53D"}
+              // style={{
+              //   backgroundColor: "gray",
+              // }}
+              // faderProps={{
+              //   size: 50,
+              //   tintColor: "black",
+              // }}
             />
             <WheelPicker
               initialValue={fat}
@@ -172,6 +182,14 @@ export const AnalysisModal = ({
               items={Items}
               onChange={(value) => setFat(value as number)}
               activeTextColor={"#FFC53D"}
+              // style={{
+              //   backgroundColor: "gray",
+              // }}
+              // faderProps={{
+              //   size: 50,
+              //   tintColor: "black",
+              // }}
+              // separatorsStyle={{ backgroundColor: "#FFC53D" }}
             />
           </View>
         </Incubator.Dialog>

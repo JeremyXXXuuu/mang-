@@ -1,11 +1,22 @@
 import { getDatabase } from "./db";
 
+export const dropUserBodyTable = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const db = getDatabase();
+    db.transaction((tx) => {
+      tx.executeSql("DROP TABLE IF EXISTS USER_BODY", [], (_, { rows }) => {
+        resolve();
+      });
+    });
+  });
+};
+
 export const createUserBodyTable = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     const db = getDatabase();
     db.transaction((tx) => {
       tx.executeSql(
-        "CREATE TABLE IF NOT EXISTS USER_BODY(date TEXT PRIMARY KEY, weight REAL, height REAL, body_fat_percentage REAL, calories INTEGER, macros TEXT, calories_goal INTEGER, macros_goal TEXT, activity TEXT, notes TEXT)",
+        "CREATE TABLE IF NOT EXISTS USER_BODY(date TEXT PRIMARY KEY, picture TEXT, weight REAL, height REAL, body_fat_percentage REAL, calories INTEGER, macros TEXT, calories_goal INTEGER, macros_goal TEXT, activity TEXT, notes TEXT)",
         [],
         (_, { rows }) => {
           resolve();
@@ -19,7 +30,7 @@ export const createUserBodyTable = (): Promise<void> => {
   });
 };
 
-export const getAllUserBody = (): Promise<any[]> => {
+export const queryAllUserBody = (): Promise<any[]> => {
   return new Promise((resolve, reject) => {
     const db = getDatabase();
     db.transaction((tx) => {
@@ -30,7 +41,7 @@ export const getAllUserBody = (): Promise<any[]> => {
   });
 };
 
-export const getUserBody = (date: string): Promise<any> => {
+export const queryUserBodyByDate = (date: string): Promise<any> => {
   return new Promise((resolve, reject) => {
     const db = getDatabase();
     db.transaction((tx) => {
@@ -56,6 +67,7 @@ export const getUserBody = (date: string): Promise<any> => {
 // userbody type
 export type UserBody = {
   date: string;
+  picture: string;
   weight: number;
   height: number;
   body_fat_percentage: number;
@@ -72,9 +84,10 @@ export const insertUserBody = (userBody: UserBody): Promise<void> => {
     const db = getDatabase();
     db.transaction((tx) => {
       tx.executeSql(
-        "INSERT INTO USER_BODY (date, weight, height, body_fat_percentage, calories, macros, calories_goal, macros_goal, activity, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO USER_BODY (date, picture, weight, height, body_fat_percentage, calories, macros, calories_goal, macros_goal, activity, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           userBody.date,
+          userBody.picture,
           userBody.weight,
           userBody.height,
           userBody.body_fat_percentage,
@@ -102,8 +115,9 @@ export const updateUserBody = (userBody: UserBody): Promise<void> => {
     const db = getDatabase();
     db.transaction((tx) => {
       tx.executeSql(
-        "UPDATE USER_BODY SET weight = ?, height = ?, body_fat_percentage = ?, calories = ?, macros = ?, calories_goal = ?, macros_goal = ?, activity = ?, notes = ? WHERE date = ?",
+        "UPDATE USER_BODY SET picture = ?, weight = ?, height = ?, body_fat_percentage = ?, calories = ?, macros = ?, calories_goal = ?, macros_goal = ?, activity = ?, notes = ? WHERE date = ?",
         [
+          userBody.picture,
           userBody.weight,
           userBody.height,
           userBody.body_fat_percentage,
@@ -130,8 +144,9 @@ export const updateUserBody = (userBody: UserBody): Promise<void> => {
 // insert new body data if not exist, update if exist
 export const upsertUserBody = (userBody: UserBody): Promise<void> => {
   return new Promise((resolve, reject) => {
-    getUserBody(userBody.date)
-      .then(() => {
+    queryUserBodyByDate(userBody.date)
+      .then((res) => {
+        console.log("update user body", res);
         updateUserBody(userBody)
           .then(() => {
             resolve();
@@ -152,7 +167,7 @@ export const upsertUserBody = (userBody: UserBody): Promise<void> => {
   });
 };
 
-export const deleteUserBody = (date: string): Promise<void> => {
+export const deleteUserBodyByDate = (date: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     const db = getDatabase();
     db.transaction((tx) => {

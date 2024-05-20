@@ -6,7 +6,7 @@ import { useNavigation, useFocusEffect, router } from "expo-router";
 import { Analysis } from "@/src/components/(tabs)/home/analysis/Analysis";
 import { AnalysisModal } from "@/src/components/(tabs)/home/analysis/AnalysisModal";
 
-import { getAllUserBody, getUserBody, queryFoodByDate } from "@/src/db";
+import { queryUserBodyByDate, queryFoodByDate } from "@/src/db";
 import _ from "lodash";
 
 type AnalysisModalBase = {
@@ -30,6 +30,7 @@ export const MyList = ({ date }: { date: string }) => {
 
   useFocusEffect(
     useCallback(() => {
+      console.log("useFocusEffect");
       queryFoodByDate(date)
         .then((data) => {
           setFoodList(data);
@@ -37,7 +38,7 @@ export const MyList = ({ date }: { date: string }) => {
         .catch((error) => {
           console.error(error);
         });
-      getUserBody(date)
+      queryUserBodyByDate(date)
         .then((data) => {
           data.macros_goal = JSON.parse(data.macros_goal);
           console.log(data.macros_goal);
@@ -81,7 +82,7 @@ export const MyList = ({ date }: { date: string }) => {
             renderItem={({ item, index }) => <FoodItem {...item} />}
             // estimatedItemSize={50}
             keyExtractor={(item) => item.id}
-            ItemSeparatorComponent={() => <View className="h-2 bg-gray-200" />}
+            // ItemSeparatorComponent={() => <View className="h-2 bg-gray-200" />}
             contentContainerStyle={{ paddingBottom: 500, paddingTop: 10 }}
           />
           {/* <FocusAwareStatusBar /> */}

@@ -48,7 +48,7 @@ const onPress = (id: string) => {
 const FoodItem = (props: FoodItemProps) => {
   return (
     <Pressable onPress={() => onPress(props.id)}>
-      <View className="flex flex-row m-2">
+      <View className="flex flex-row p-2">
         <View>
           <Image
             source={{ uri: props.picture }}
