@@ -12,9 +12,9 @@ export type FoodItemProps = {
   name: string;
   calories: number;
   macros: {
-    C: number;
-    P: number;
-    F: number;
+    C: string;
+    P: string;
+    F: string;
   };
   repas: "lunch" | "dinner" | "breakfast" | "snack";
   time: string;
@@ -24,9 +24,9 @@ export type FoodItemProps = {
 
 const CaloriesMacros = (props: {
   calories: number;
-  C: number;
-  P: number;
-  F: number;
+  C: string;
+  P: string;
+  F: string;
 }) => {
   return (
     <View className="flex flex-row w-48 justify-between">

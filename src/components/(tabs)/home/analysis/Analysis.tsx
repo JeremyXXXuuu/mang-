@@ -21,10 +21,22 @@ export const Analysis = ({
   data: FoodItemProps[];
   base: Base;
 }) => {
-  const calories = data.reduce((acc, food) => acc + food.calories, 0);
-  const C = data.reduce((acc, food) => acc + food.macros.C, 0);
-  const P = data.reduce((acc, food) => acc + food.macros.P, 0);
-  const F = data.reduce((acc, food) => acc + food.macros.F, 0);
+  const calories: number = data.reduce(
+    (acc: number, food: FoodItemProps): number => acc + food.calories,
+    0
+  );
+  const C: number = data.reduce(
+    (acc: number, food: FoodItemProps): number => acc + Number(food.macros.C),
+    0
+  );
+  const P: number = data.reduce(
+    (acc: number, food: FoodItemProps): number => acc + Number(food.macros.P),
+    0
+  );
+  const F: number = data.reduce(
+    (acc: number, food: FoodItemProps): number => acc + Number(food.macros.F),
+    0
+  );
 
   const totalCalories = base.calories;
   const totalC = Math.round((totalCalories * base.carbs) / 100 / 4);

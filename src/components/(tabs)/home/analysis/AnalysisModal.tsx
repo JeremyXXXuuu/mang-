@@ -132,7 +132,14 @@ export const AnalysisModal = ({
                   <TextInput
                     className="text-center mt-1"
                     value={calories.toString()}
-                    onChangeText={(value) => setCalories(Number(value))}
+                    onChangeText={(value) => {
+                      // 只允许整数 ，如果为空设置为0
+                      if (value === "") {
+                        setCalories(0);
+                      } else {
+                        setCalories(parseInt(value));
+                      }
+                    }}
                     keyboardType="numeric"
                   />
                 </View>

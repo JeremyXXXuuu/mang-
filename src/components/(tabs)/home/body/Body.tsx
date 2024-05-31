@@ -247,6 +247,10 @@ export const Body = ({ date }: { date: string }) => {
             <TextInput
               placeholder="Height"
               onChangeText={(text) => {
+                if (text === "") {
+                  setHeight("0");
+                  return;
+                }
                 // 将逗号替换为点
                 text = text.replace(",", ".");
                 // 只允许数字和小数点，并且最多两位小数
@@ -265,6 +269,10 @@ export const Body = ({ date }: { date: string }) => {
             <TextInput
               placeholder="Weight"
               onChangeText={(text) => {
+                if (text === "") {
+                  setWeight("0");
+                  return;
+                }
                 // 将逗号替换为点
                 text = text.replace(",", ".");
                 // 只允许数字和小数点，并且最多两位小数
@@ -283,6 +291,10 @@ export const Body = ({ date }: { date: string }) => {
             <TextInput
               placeholder="Body fat"
               onChangeText={(text) => {
+                if (text === "") {
+                  setBodyFat("0");
+                  return;
+                }
                 // 将逗号替换为点
                 text = text.replace(",", ".");
                 // 只允许数字和小数点，并且最多两位小数
