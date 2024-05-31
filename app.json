@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "nav-temp",
-    "slug": "nav-temp",
+    "name": "food-log",
+    "slug": "food-log",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

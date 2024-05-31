@@ -1,12 +1,12 @@
 {
-  "name": "fog",
+  "name": "food-log",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start -c",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "build:ios": "prebuild && expo run:ios --configuration Release --device",
+    "build:ios": "yarn prebuild && expo run:ios --configuration Release --device",
     "build:android": "prebuild && expo run:android --variant release",
     "prebuild": "expo prebuild",
     "web": "expo start --web",
@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
-    "@react-native-community/datetimepicker": "^7.7.0",
+    "@react-native-community/datetimepicker": "^8.0.0",
+    "@react-native-picker/picker": "^2.7.5",
     "@react-navigation/native": "^6.0.2",
     "@shopify/flash-list": "1.6.3",
     "@tamagui/config": "^1.94.4",
@@ -49,6 +50,7 @@
     "react-native-svg": "14.1.0",
     "react-native-ui-lib": "^7.20.3",
     "react-native-web": "~0.19.6",
+    "react-native-wheel-pick": "^1.2.2",
     "tamagui": "^1.94.4"
   },
   "devDependencies": {
