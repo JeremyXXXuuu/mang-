@@ -7,7 +7,7 @@ import { Analysis } from "@/src/components/(tabs)/home/analysis/Analysis";
 import { AnalysisModal } from "@/src/components/(tabs)/home/analysis/AnalysisModal";
 
 import { queryUserBodyByDate, queryFoodByDate } from "@/src/db";
-import _ from "lodash";
+import _, { set } from "lodash";
 
 type AnalysisModalBase = {
   calories: number;
@@ -15,16 +15,17 @@ type AnalysisModalBase = {
   protein: number;
   fat: number;
 };
+const defaultBase: AnalysisModalBase = {
+  calories: 2000,
+  carbs: 50,
+  protein: 30,
+  fat: 20,
+};
 
 export const MyList = ({ date }: { date: string }) => {
   const [foodList, setFoodList] = useState<FoodItemProps[]>([]);
 
-  const [base, setBase] = useState<AnalysisModalBase>({
-    calories: 2000,
-    carbs: 50,
-    protein: 30,
-    fat: 20,
-  });
+  const [base, setBase] = useState<AnalysisModalBase>(defaultBase);
   const navigation = useNavigation();
   const focused = navigation.isFocused();
 
@@ -40,6 +41,7 @@ export const MyList = ({ date }: { date: string }) => {
         });
       queryUserBodyByDate(date)
         .then((data) => {
+          console.log(data);
           data.macros_goal = JSON.parse(data.macros_goal);
           console.log(data.macros_goal);
           setBase({
@@ -51,7 +53,9 @@ export const MyList = ({ date }: { date: string }) => {
         })
         .catch((error) => {
           // alert("Please set your body data first");
-          console.log(error);
+          setBase(defaultBase);
+
+          console.log("food page index", error);
         });
     }, [date])
   );

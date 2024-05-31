@@ -69,6 +69,7 @@ export const AnalysisModal = ({
       );
 
       const userBodyData: UserBody = {
+        picture: "",
         date: date,
         weight: 0,
         height: 0,
