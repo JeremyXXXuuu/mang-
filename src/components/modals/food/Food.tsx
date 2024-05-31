@@ -67,9 +67,9 @@ export function Button({
 }
 
 type Macros = {
-  C: number;
-  P: number;
-  F: number;
+  C: string;
+  P: string;
+  F: string;
 };
 
 const Food = ({ id }: { id: string }) => {
@@ -77,8 +77,8 @@ const Food = ({ id }: { id: string }) => {
   const [food, setFood] = useState<any>(undefined);
 
   const [name, setName] = useState("");
-  const [calories, setCalories] = useState<number>(0);
-  const [macros, setMacros] = useState<Macros>({ C: 0, P: 0, F: 0 });
+  const [calories, setCalories] = useState<string>("");
+  const [macros, setMacros] = useState<Macros>({ C: "", P: "", F: "" });
   const [repas, setRepas] = useState("");
 
   const [location, setLocation] = useState("");
@@ -90,7 +90,7 @@ const Food = ({ id }: { id: string }) => {
         .then((data) => {
           console.log(data);
           setName(data.name);
-          setCalories(data.calories);
+          setCalories(data.calories.toString());
           setMacros(data.macros);
           setRepas(data.repas);
           setLocation(data.location);
@@ -145,11 +145,18 @@ const Food = ({ id }: { id: string }) => {
         console.log("no image");
         console.log("placeholder image", PlaceholderImage);
       }
+      console.log(
+        calories,
+        macros,
+        Number(macros?.F)! * 9 + Number(macros?.P)! * 4 + Number(macros?.C)! * 4
+      );
 
       const args = [
         name,
-        calories == 0
-          ? macros?.F! * 9 + macros?.P! * 4 + macros?.C! * 4
+        calories == ""
+          ? Number(macros?.F)! * 9 +
+            Number(macros?.P)! * 4 +
+            Number(macros?.C)! * 4
           : calories || 0,
         JSON.stringify(macros),
         dateTime.toISOString(),
@@ -299,50 +306,73 @@ const Food = ({ id }: { id: string }) => {
               <Text style={{ textAlign: "center" }}>Calories</Text>
               <TextInput
                 placeholder="Enter calories"
-                onChangeText={(text) => setCalories(Number(text))}
+                onChangeText={(text) => {
+                  // 将逗号替换为点
+                  text = text.replace(",", ".");
+                  // 只允许数字和小数点，并且最多两位小数
+                  const regex = /^\d*\.?\d{0,2}$/;
+                  if (regex.test(text)) {
+                    setCalories(text);
+                  }
+                }}
                 value={calories?.toString()}
                 keyboardType="numeric"
               />
             </View>
-
-            <View style={{ width: 68 }}>
-              <Text style={{ textAlign: "center" }}>Fat(g)</Text>
-              <TextInput
-                placeholder="fat"
-                onChangeText={(text) => {
-                  setMacros({ ...macros, F: Number(text) });
-                }}
-                value={macros?.F?.toString()}
-                keyboardType="numeric"
-              />
-            </View>
-
-            <View style={{ width: 68 }}>
-              <Text style={{ textAlign: "center" }}>Protein(g)</Text>
-              <TextInput
-                placeholder="protein"
-                onChangeText={(text) => {
-                  setMacros({ ...macros, P: Number(text) });
-                }}
-                value={macros?.P?.toString()}
-                keyboardType="numeric"
-              />
-            </View>
-
             <View style={{ width: 68 }}>
               <Text style={{ textAlign: "center" }}>Carbs(g)</Text>
               <TextInput
                 placeholder="carbs"
                 onChangeText={(text) => {
-                  setMacros({ ...macros, C: Number(text) });
+                  // 将逗号替换为点
+                  text = text.replace(",", ".");
+                  // 只允许数字和小数点，并且最多两位小数
+                  const regex = /^\d*\.?\d{0,2}$/;
+                  if (regex.test(text)) {
+                    setMacros({ ...macros, C: text });
+                  }
                 }}
                 value={macros?.C?.toString()}
                 keyboardType="numeric"
               />
             </View>
+            <View style={{ width: 68 }}>
+              <Text style={{ textAlign: "center" }}>Protein(g)</Text>
+              <TextInput
+                placeholder="protein"
+                onChangeText={(text) => {
+                  // 将逗号替换为点
+                  text = text.replace(",", ".");
+                  // 只允许数字和小数点，并且最多两位小数
+                  const regex = /^\d*\.?\d{0,2}$/;
+                  if (regex.test(text)) {
+                    setMacros({ ...macros, P: text });
+                  }
+                }}
+                value={macros?.P?.toString()}
+                keyboardType="numeric"
+              />
+            </View>
+            <View style={{ width: 68 }}>
+              <Text style={{ textAlign: "center" }}>Fat(g)</Text>
+              <TextInput
+                placeholder="fat"
+                onChangeText={(text) => {
+                  // 将逗号替换为点
+                  text = text.replace(",", ".");
+                  // 只允许数字和小数点，并且最多两位小数
+                  const regex = /^\d*\.?\d{0,2}$/;
+                  if (regex.test(text)) {
+                    setMacros({ ...macros, F: text });
+                  }
+                }}
+                value={macros?.F?.toString()}
+                keyboardType="numeric"
+              />
+            </View>
           </View>
-          {/* show date time picker directly in ios,  */}
 
+          {/* show date time picker directly in ios,  */}
           <View className="my-2">
             {Platform.OS === "ios" ? (
               <SafeAreaView className="flex flex-row justify-between">
