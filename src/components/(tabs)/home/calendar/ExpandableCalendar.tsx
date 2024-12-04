@@ -66,10 +66,6 @@ export const ExpandableCalendarScreen = (props: Props) => {
     setDate(date);
   }, []);
 
-  // const onMonthChange = useCallback(({dateString}) => {
-  //   console.log('ExpandableCalendarScreen onMonthChange: ', dateString);
-  // }, []);
-
   const renderItem = useCallback(({ item }: any) => {
     return <AgendaItem item={item} />;
   }, []);
@@ -78,7 +74,7 @@ export const ExpandableCalendarScreen = (props: Props) => {
     <CalendarProvider
       date={ITEMS[1]?.title}
       onDateChanged={onDateChanged}
-      // onMonthChange={onMonthChange}
+      onMonthChange={(month) => console.log(month)}
       showTodayButton
       // disabledOpacity={0.6}
       theme={todayBtnTheme.current}
@@ -92,6 +88,8 @@ export const ExpandableCalendarScreen = (props: Props) => {
         />
       ) : (
         <ExpandableCalendar
+          hideKnob={true}
+          // hideArrows={true}
           testID={testIDs.expandableCalendar.CONTAINER}
           // horizontal={false}
           // hideArrows
@@ -112,13 +110,7 @@ export const ExpandableCalendarScreen = (props: Props) => {
           // closeOnDayPress={false}
         />
       )}
-      {/* <AgendaList
-        sections={ITEMS}
-        renderItem={renderItem}
-        // scrollToNextEvent
-        sectionStyle={styles.section}
-        // dayFormat={'yyyy-MM-d'}
-      /> */}
+
       <View className="">
         {/* <MyList date={date} /> */}
         <Home date={date} />

@@ -14,7 +14,7 @@ const segments = {
   "FOOD&BODY": [{ label: "Food" }, { label: "Body" }],
 };
 
-import { MyList } from "./foodList";
+import { FoodList } from "./foodList";
 import { Body } from "./body/Body";
 import AddButton from "../AddButton";
 import { router } from "expo-router";
@@ -37,7 +37,7 @@ export const Home = ({ date }: { date: string }) => {
         containerStyle={{ margin: Spacings.s2 }}
         onChangeIndex={onChangeIndex}
       />
-      {renderPage === "Food" ? <MyList date={date} /> : <Body date={date} />}
+      {renderPage === "Food" ? <FoodList date={date} /> : <Body date={date} />}
     </View>
   );
 };

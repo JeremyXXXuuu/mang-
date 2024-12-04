@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { FlatList, TouchableOpacity, View, ScrollView } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import FoodItem, { FoodItemProps } from "./foodItem";
 import { useNavigation, useFocusEffect, router } from "expo-router";
@@ -22,7 +22,7 @@ const defaultBase: AnalysisModalBase = {
   fat: 20,
 };
 
-export const MyList = ({ date }: { date: string }) => {
+export const FoodList = ({ date }: { date: string }) => {
   const [foodList, setFoodList] = useState<FoodItemProps[]>([]);
 
   const [base, setBase] = useState<AnalysisModalBase>(defaultBase);
@@ -66,32 +66,26 @@ export const MyList = ({ date }: { date: string }) => {
   }, []);
 
   return (
-    <View>
-      <View className="flex flex-col">
-        <TouchableOpacity onPress={onAnalysisPress}>
-          <Analysis data={foodList} base={base} />
-        </TouchableOpacity>
+    <FlatList
+      data={foodList}
+      renderItem={({ item }) => <FoodItem {...item} />}
+      keyExtractor={(item) => item.id}
+      ListHeaderComponent={
+        <>
+          <TouchableOpacity onPress={onAnalysisPress}>
+            <Analysis data={foodList} base={base} />
+          </TouchableOpacity>
 
-        <AnalysisModal
-          showDialog={showDialog}
-          setShowDialog={setShowDialog}
-          base={base}
-          setBase={setBase}
-          date={date}
-        />
-
-        <View className="flex flex-row m-1">
-          <FlatList
-            data={foodList}
-            renderItem={({ item, index }) => <FoodItem {...item} />}
-            // estimatedItemSize={50}
-            keyExtractor={(item) => item.id}
-            // ItemSeparatorComponent={() => <View className="h-2 bg-gray-200" />}
-            contentContainerStyle={{ paddingBottom: 500, paddingTop: 10 }}
+          <AnalysisModal
+            showDialog={showDialog}
+            setShowDialog={setShowDialog}
+            base={base}
+            setBase={setBase}
+            date={date}
           />
-          {/* <FocusAwareStatusBar /> */}
-        </View>
-      </View>
-    </View>
+        </>
+      }
+      contentContainerStyle={{ paddingBottom: 200, paddingTop: 10 }}
+    />
   );
 };
