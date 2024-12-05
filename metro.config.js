@@ -8,6 +8,8 @@ const config = getDefaultConfig(__dirname, {
 
   isCSSEnabled: true,
 });
+config.resolver.sourceExts.push("sql");
+
 // add nice web support with optimizing compiler + CSS extraction
 
 const { withTamagui } = require("@tamagui/metro-plugin");
